@@ -21,6 +21,8 @@ package dingodb.pb.coordinator;
 
 option java_package = "io.dingodb.coordinator";
 
+option cc_generic_services = true;
+
 enum TaskPreCheckType {
   NONE = 0;  // this is a placeholder
   REGION_CHECK = 1;

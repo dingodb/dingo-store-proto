@@ -22,6 +22,8 @@ package dingodb.pb.index;
 
 option java_package = "io.dingodb.index";
 
+option cc_generic_services = true;
+
 message VectorAddRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   dingodb.pb.store.Context context = 2;

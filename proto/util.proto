@@ -20,6 +20,8 @@ package dingodb.pb.util;
 
 option java_package = "io.dingodb.util";
 
+option cc_generic_services = true;
+
 service UtilService {
   rpc VectorCalcDistance(dingodb.pb.index.VectorCalcDistanceRequest)
       returns (dingodb.pb.index.VectorCalcDistanceResponse);

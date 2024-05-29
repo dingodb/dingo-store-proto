@@ -21,6 +21,8 @@ package dingodb.pb.fileservice;
 
 option java_package = "io.dingodb.fileservice";
 
+option cc_generic_services = true;
+
 message GetFileRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   int64 reader_id = 2;

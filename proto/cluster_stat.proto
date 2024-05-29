@@ -18,6 +18,8 @@ package dingodb.pb.cluster;
 
 option java_package = "io.dingodb.cluster";
 
+option cc_generic_services = true;
+
 message ClusterStatRequest {};
 message ClusterStatResponse {};
 message DingoRequest {};

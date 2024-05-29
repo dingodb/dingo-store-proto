@@ -23,6 +23,8 @@ package dingodb.pb.debug;
 
 option java_package = "io.dingodb.debug";
 
+option cc_generic_services = true;
+
 message AddRegionRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   dingodb.pb.common.RegionDefinition region = 2;

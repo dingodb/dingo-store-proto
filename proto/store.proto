@@ -21,6 +21,8 @@ package dingodb.pb.store;
 
 option java_package = "io.dingodb.store";
 
+option cc_generic_services = true;
+
 enum IsolationLevel {
   InvalidIsolationLevel = 0;  // this is just a placeholder, not a valid isolation level
   SnapshotIsolation = 1;

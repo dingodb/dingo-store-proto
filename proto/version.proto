@@ -8,6 +8,8 @@ package dingodb.pb.version;
 
 option java_package = "io.dingodb.version";
 
+option cc_generic_services = true;
+
 // version service
 enum VersionType {
   TABLE = 0;

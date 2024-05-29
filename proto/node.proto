@@ -23,6 +23,8 @@ package dingodb.pb.node;
 
 option java_package = "io.dingodb.node";
 
+option cc_generic_services = true;
+
 message NodeInfo {
   int64 id = 1;
   dingodb.pb.common.ClusterRole role = 2;
