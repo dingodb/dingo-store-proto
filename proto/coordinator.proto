@@ -23,6 +23,44 @@ option java_package = "io.dingodb.coordinator";
 
 option cc_generic_services = true;
 
+enum IdEpochType {
+  ID_NONE = 0;  // this is a placeholder
+
+  ID_NEXT_COORINATOR = 1;
+  ID_NEXT_STORE = 2;
+  ID_NEXT_EXECUTOR = 3;
+  ID_NEXT_SCHEMA = 4;
+  ID_NEXT_REGION = 5;
+  ID_NEXT_TABLE = 6;
+  ID_NEXT_INDEX = 7;  // deprecated for index id auto_increment
+  ID_NEXT_TENANT = 8;
+
+  EPOCH_COORINATOR = 11;
+  EPOCH_STORE = 12;
+  EPOCH_EXECUTOR = 13;
+  EPOCH_SCHEMA = 14;
+  EPOCH_REGION = 15;
+  EPOCH_TABLE = 16;
+  EPOCH_INDEX = 17;
+
+  RAFT_APPLY_TERM = 21;
+  RAFT_APPLY_INDEX = 22;
+
+  ID_NEXT_REGION_CMD = 31;
+  ID_NEXT_TASK_LIST = 32;
+
+  ID_NEXT_LEASE = 40;
+  ID_NEXT_REVISION = 41;
+
+  ID_NEXT_META_WATCH = 42;
+
+  ID_GC_SAFE_POINT = 50;
+
+  // for online ddl
+  ID_SCHEMA_VERSION = 51;
+  ID_DDL_JOB = 52;
+}
+
 enum TaskPreCheckType {
   NONE = 0;  // this is a placeholder
   REGION_CHECK = 1;
@@ -1077,6 +1115,18 @@ message BalanceLeaderResponse {
   repeated TransferLeaderTask tasks = 12;
 }
 
+message CreateIdsRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  IdEpochType id_epoch_type = 2;
+  int64 count = 3;
+}
+
+message CreateIdsResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+  repeated int64 ids = 3;
+}
+
 service CoordinatorService {
   // Hello, this is for coordinator and meta
   rpc Hello(HelloRequest) returns (HelloResponse);
@@ -1148,4 +1198,7 @@ service CoordinatorService {
 
   // Balance leader
   rpc BalanceLeader(BalanceLeaderRequest) returns (BalanceLeaderResponse);
+
+  // CreateIds
+  rpc CreateIds(CreateIdsRequest) returns (CreateIdsResponse);
 }
