@@ -30,6 +30,8 @@ message VectorAddRequest {
   repeated dingodb.pb.common.VectorWithId vectors = 3;
   bool replace_deleted = 4;
   bool is_update = 5;
+
+  int64 ttl = 6;  // duration time, unit ms
 }
 
 message VectorAddResponse {
@@ -39,6 +41,8 @@ message VectorAddResponse {
   // key_states[index] = true, add success
   // key_states[index] = false, add failed
   repeated bool key_states = 3;
+
+  int64 ts = 4;
 }
 
 message VectorBatchQueryRequest {
@@ -50,6 +54,8 @@ message VectorBatchQueryRequest {
   repeated string selected_keys = 6;  // If without_scalar_data is false, selected_keys is used to select scalar data,
                                       // if this parameter is null, all scalar data will be returned.
   bool without_table_data = 7;        // Default false, if true, response without table data.
+
+  int64 ts = 10;
 }
 
 message VectorBatchQueryResponse {
@@ -63,22 +69,33 @@ message VectorScanQueryRequest {
   dingodb.pb.store.Context context = 2;
   int64 vector_id_start = 3;
   bool is_reverse_scan = 4;
-  int64 max_scan_count = 5;  // the max count user want to scan
-  int64 vector_id_end = 6;   // the end id of scan, if is_reverse_scan is true, vector_id_end must be less than
-                             // vector_id_start, if is_reverse_scan is false, vector_id_end must be greater than
-                             // vector_id_start
-                             // the real range is [start, end], include start and end
-                             // if vector_id_end == 0, scan to the end of the region
+  // the max count user want to scan
+  int64 max_scan_count = 5;
 
-  bool without_vector_data = 11;       // Default false, if true, response without vector data.
-  bool without_scalar_data = 12;       // Default false, if true, response without scalar data.
-  repeated string selected_keys = 13;  // If without_scalar_data is false, selected_keys is used to select scalar data,
-                                       // if this parameter is null, all scalar data will be returned.
-  bool without_table_data = 14;        // Default false, if true, response without table data.
+  // the end id of scan, if is_reverse_scan is true, vector_id_end must be less than
+  // vector_id_start, if is_reverse_scan is false, vector_id_end must be greater than
+  // vector_id_start
+  // the real range is [start, end], include start and end
+  // if vector_id_end == 0, scan to the end of the region
+  int64 vector_id_end = 6;
+
+  // Default false, if true, response without vector data.
+  bool without_vector_data = 11;
+  // Default false, if true, response without scalar data.
+  bool without_scalar_data = 12;
+
+  // If without_scalar_data is false, selected_keys is used to select scalar data,
+  // if this parameter is null, all scalar data will be returned.
+  repeated string selected_keys = 13;
+
+  // Default false, if true, response without table data.
+  bool without_table_data = 14;
 
   // Whether to use scalar filtering.
   bool use_scalar_filter = 20;
   dingodb.pb.common.VectorScalardata scalar_for_filter = 21;
+
+  int64 ts = 10;
 }
 
 message VectorScanQueryResponse {
@@ -128,12 +145,16 @@ message VectorDeleteResponse {
   // key_states[index] = true, delete success
   // key_states[index] = false, key not exist
   repeated bool key_states = 3;
+
+  int64 ts = 4;
 }
 
 message VectorGetBorderIdRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   dingodb.pb.store.Context context = 2;
   bool get_min = 3;  // if true, get min id, else get max id
+
+  int64 ts = 4;
 }
 
 message VectorGetBorderIdResponse {
@@ -219,6 +240,8 @@ message VectorCountRequest {
   // [vector_id_start, vector_id_end)
   int64 vector_id_start = 3;  // default region range start_key
   int64 vector_id_end = 4;    // default region range end_key, not include
+
+  int64 ts = 10;
 }
 
 message VectorCountResponse {

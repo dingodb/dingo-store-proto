@@ -255,6 +255,10 @@ message TxnRaftResponse {
 message Request {
   CmdType cmd_type = 1;
 
+  int64 ts = 2;
+  // absolute timestamp ms
+  int64 ttl = 3;
+
   oneof cmd_body {
     // Store Operation[1000, 2000]
     PutRequest put = 1000;

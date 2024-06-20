@@ -378,6 +378,63 @@ message ShowAffinityResponse {
   repeated ThreadCorePair pairs = 10;
 }
 
+message DumpRegionRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+
+  int64 region_id = 2;
+  int64 offset = 3;
+  int64 limit = 4;
+}
+
+message DumpRegionResponse {
+  enum ValueFlag {
+    PUT = 0;
+    PUT_WITH_TTL = 1;
+    DELETE = 2;
+  }
+
+  message KV {
+    bytes key = 1;
+    int64 ts = 2;
+    ValueFlag flag = 3;
+    int64 ttl = 4;
+    bytes value = 5;
+  }
+
+  message Vector {
+    int64 vector_id = 1;
+    int64 ts = 2;
+    ValueFlag flag = 3;
+    int64 ttl = 4;
+
+    dingodb.pb.common.Vector vector = 10;
+    dingodb.pb.common.VectorScalardata scalar_data = 11;
+    dingodb.pb.common.VectorTableData table_data = 12;
+
+    bytes key = 20;  // for server inner use
+  }
+
+  message Ducument {
+    int64 document_id = 1;
+    int64 ts = 2;
+    ValueFlag flag = 3;
+    int64 ttl = 4;
+
+    dingodb.pb.common.Document document = 10;
+  }
+
+  message Data {
+    repeated KV kvs = 100;
+    repeated Vector vectors = 101;
+    repeated Ducument ducuments = 102;
+  }
+
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+
+  Data data = 3;
+}
+
 service DebugService {
   // region
   rpc AddRegion(AddRegionRequest) returns (AddRegionResponse);
@@ -414,4 +471,7 @@ service DebugService {
   rpc BindCore(BindCoreRequest) returns (BindCoreResponse);
   rpc UnbindCore(UnbindCoreRequest) returns (UnbindCoreResponse);
   rpc ShowAffinity(ShowAffinityRequest) returns (ShowAffinityResponse);
+
+  // dump region all version data
+  rpc DumpRegion(DumpRegionRequest) returns (DumpRegionResponse);
 }

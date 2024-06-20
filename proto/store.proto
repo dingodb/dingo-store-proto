@@ -42,6 +42,8 @@ message KvGetRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   Context context = 2;
   bytes key = 3;
+
+  int64 ts = 4;
 }
 
 message KvGetResponse {
@@ -54,6 +56,8 @@ message KvBatchGetRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   Context context = 2;
   repeated bytes keys = 3;
+
+  int64 ts = 4;
 }
 
 message KvBatchGetResponse {
@@ -66,28 +70,38 @@ message KvPutRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   Context context = 2;
   dingodb.pb.common.KeyValue kv = 3;
+
+  int64 ttl = 4;  // duration time, unit ms
 }
 
 message KvPutResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
+
+  int64 ts = 3;
 }
 
 message KvBatchPutRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   Context context = 2;
   repeated dingodb.pb.common.KeyValue kvs = 3;
+
+  int64 ttl = 4;  // duration time, unit ms
 }
 
 message KvBatchPutResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
+
+  int64 ts = 3;
 }
 
 message KvPutIfAbsentRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   Context context = 2;
   dingodb.pb.common.KeyValue kv = 3;
+
+  int64 ttl = 4;  // duration time, unit ms
 }
 
 message KvPutIfAbsentResponse {
@@ -96,6 +110,8 @@ message KvPutIfAbsentResponse {
   // key_state = true, update success
   // key_state = false, update failed
   bool key_state = 3;
+
+  int64 ts = 4;
 }
 
 message KvBatchPutIfAbsentRequest {
@@ -103,6 +119,8 @@ message KvBatchPutIfAbsentRequest {
   Context context = 2;
   repeated dingodb.pb.common.KeyValue kvs = 3;
   bool is_atomic = 4;
+
+  int64 ttl = 5;  // duration time, unit ms
 }
 
 message KvBatchPutIfAbsentResponse {
@@ -112,6 +130,8 @@ message KvBatchPutIfAbsentResponse {
   // key_states[index] = true, update success
   // key_states[index] = false, update failed
   repeated bool key_states = 3;
+
+  int64 ts = 4;
 }
 
 message KvBatchDeleteRequest {
@@ -127,6 +147,8 @@ message KvBatchDeleteResponse {
   // key_states[index] = true, delete success
   // key_states[index] = false, key not exist
   repeated bool key_states = 3;
+
+  int64 ts = 4;
 }
 
 message KvDeleteRangeRequest {
@@ -138,7 +160,7 @@ message KvDeleteRangeRequest {
 message KvDeleteRangeResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
-  int64 delete_count = 3;
+  int64 delete_count = 3;  // deprecated
 }
 
 message KvCompareAndSetRequest {
@@ -147,6 +169,8 @@ message KvCompareAndSetRequest {
   dingodb.pb.common.KeyValue kv = 3;
   // empty means key not exist
   bytes expect_value = 4;
+
+  int64 ttl = 5;  // duration time, unit ms
 }
 
 message KvCompareAndSetResponse {
@@ -155,6 +179,8 @@ message KvCompareAndSetResponse {
   // key_state = true, update success
   // key_state = false, update failed
   bool key_state = 3;
+
+  int64 ts = 4;
 }
 
 message KvBatchCompareAndSetRequest {
@@ -164,6 +190,8 @@ message KvBatchCompareAndSetRequest {
   // empty means key not exist
   repeated bytes expect_values = 4;
   bool is_atomic = 5;
+
+  int64 ttl = 6;  // duration time, unit ms
 }
 
 message KvBatchCompareAndSetResponse {
@@ -172,6 +200,8 @@ message KvBatchCompareAndSetResponse {
   // key_state = true, update success
   // key_state = false, update failed
   repeated bool key_states = 3;
+
+  int64 ts = 4;
 }
 
 // aggregation type
@@ -257,6 +287,8 @@ message KvScanBeginRequest {
 
   // coprocessor
   Coprocessor coprocessor = 8;
+
+  int64 ts = 9;
 }
 
 message KvScanBeginResponse {
@@ -343,6 +375,8 @@ message KvScanBeginRequestV2 {
 
   // coprocessor
   dingodb.pb.common.CoprocessorV2 coprocessor = 20;
+
+  int64 ts = 21;
 }
 
 message KvScanBeginResponseV2 {
