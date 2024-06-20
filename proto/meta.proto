@@ -783,8 +783,8 @@ enum TsoOpType {
 }
 
 message TsoTimestamp {
-  int64 physical = 1;
-  int64 logical = 2;
+  int64 physical = 1;  // 46 bit
+  int64 logical = 2;   // 18 bit
 }
 
 message TsoRequest {

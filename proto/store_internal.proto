@@ -54,6 +54,7 @@ message Region {
   int64 id = 1;
   dingodb.pb.common.RegionType region_type = 10;
   dingodb.pb.common.RegionDefinition definition = 20;
+  dingodb.pb.common.Range encode_range = 21;
   int64 leader_id = 30;
   dingodb.pb.common.StoreRegionState state = 40;
   repeated dingodb.pb.common.StoreRegionState history_states = 50;

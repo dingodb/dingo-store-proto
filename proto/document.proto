@@ -29,6 +29,8 @@ message DocumentAddRequest {
   dingodb.pb.store.Context context = 2;
   repeated dingodb.pb.common.DocumentWithId documents = 3;
   bool is_update = 4;
+
+  int64 ttl = 5;  // duration time, unit ms
 }
 
 message DocumentAddResponse {
@@ -38,15 +40,23 @@ message DocumentAddResponse {
   // key_states[index] = true, add success
   // key_states[index] = false, add failed
   repeated bool key_states = 3;
+
+  int64 ts = 4;
 }
 
 message DocumentBatchQueryRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   dingodb.pb.store.Context context = 2;
   repeated int64 document_ids = 3;
-  bool without_scalar_data = 4;       // Default false, if true, response without scalar data.
-  repeated string selected_keys = 5;  // If without_scalar_data is false, selected_keys is used to select scalar data,
-                                      // if this parameter is null, all scalar data will be returned.
+
+  // Default false, if true, response without scalar data.
+  bool without_scalar_data = 4;
+
+  // If without_scalar_data is false, selected_keys is used to select scalar data,
+  // if this parameter is null, all scalar data will be returned.
+  repeated string selected_keys = 5;
+
+  int64 ts = 10;
 }
 
 message DocumentBatchQueryResponse {
@@ -60,16 +70,24 @@ message DocumentScanQueryRequest {
   dingodb.pb.store.Context context = 2;
   int64 document_id_start = 3;
   bool is_reverse_scan = 4;
-  int64 max_scan_count = 5;   // the max count user want to scan
-  int64 document_id_end = 6;  // the end id of scan, if is_reverse_scan is true, document_id_end must be less than
-                              // document_id_start, if is_reverse_scan is false, document_id_end must be greater than
-                              // document_id_start
-                              // the real range is [start, end], include start and end
-                              // if document_id_end == 0, scan to the end of the region
+  int64 max_scan_count = 5;  // the max count user want to scan
 
-  bool without_scalar_data = 12;       // Default false, if true, response without scalar data.
-  repeated string selected_keys = 13;  // If without_scalar_data is false, selected_keys is used to select scalar data,
-                                       // if this parameter is null, all scalar data will be returned.
+  // the end id of scan, if is_reverse_scan is true, document_id_end must be less than
+  // document_id_start, if is_reverse_scan is false, document_id_end must be greater than
+  // document_id_start
+  // the real range is [start, end], include start and end
+  // if document_id_end == 0, scan to the end of the region
+
+  int64 document_id_end = 6;
+
+  // Default false, if true, response without scalar data.
+  bool without_scalar_data = 12;
+
+  // If without_scalar_data is false, selected_keys is used to select scalar data,
+  // if this parameter is null, all scalar data will be returned.
+  repeated string selected_keys = 13;
+
+  int64 ts = 20;
 }
 
 message DocumentScanQueryResponse {
@@ -114,12 +132,16 @@ message DocumentDeleteResponse {
   // key_states[index] = true, delete success
   // key_states[index] = false, key not exist
   repeated bool key_states = 3;
+
+  int64 ts = 4;
 }
 
 message DocumentGetBorderIdRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   dingodb.pb.store.Context context = 2;
   bool get_min = 3;  // if true, get min id, else get max id
+
+  int64 ts = 4;
 }
 
 message DocumentGetBorderIdResponse {
@@ -134,6 +156,8 @@ message DocumentCountRequest {
   // [document_id_start, document_id_end)
   int64 document_id_start = 3;  // default region range start_key
   int64 document_id_end = 4;    // default region range end_key, not include
+
+  int64 ts = 10;
 }
 
 message DocumentCountResponse {
