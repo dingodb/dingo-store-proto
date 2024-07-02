@@ -783,7 +783,7 @@ enum TsoOpType {
 }
 
 message TsoTimestamp {
-  int64 physical = 1;  // 46 bit
+  int64 physical = 1;  // 46 bit, this is the physical timestamp in ms, begin from 1577808000000LL(2020-01-01 00:00:00)
   int64 logical = 2;   // 18 bit
 }
 
