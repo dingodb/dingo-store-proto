@@ -664,6 +664,9 @@ message TxnPessimisticLockRequest {
   // not need to retry the whole transaction. The name comes from the `SELECT ... FOR UPDATE` SQL statement which is a
   // locking read. Each `SELECT ... FOR UPDATE` in a transaction will be assigned its own timestamp oracle.
   uint64 for_update_ts = 7;
+  // If it is true, store will return values of the keys if no error, so executor can cache the values for
+  // later read in the same transaction.
+  bool return_values = 8;
 }
 
 message TxnPessimisticLockResponse {
@@ -680,6 +683,17 @@ message TxnPessimisticLockResponse {
   //                           let Executor retry.
   //    2.3 SelfRolledBack: the transaction itself has been rolled back when it tries to prewrite.
   repeated TxnResultInfo txn_result = 3;
+  // The values is set if 'return_values' is true in the request and no error.
+  // for store table/index region:
+  repeated dingodb.pb.common.KeyValue kvs = 4;
+  // The values is set if 'return_values' is true in the request and no error.
+  // for vector index region:
+  repeated dingodb.pb.common.VectorWithId vector = 5;
+  // for document index region:
+  // When some key is locked but we cannot check locks of
+  // all keys. In this case, `documents` should be empty and the client should redo
+  // batch get all the keys after resolving the lock.
+  repeated dingodb.pb.common.DocumentWithId documents = 6;
 }
 
 // Unlock keys locked using `TxnPessimisticLockRequest`.
