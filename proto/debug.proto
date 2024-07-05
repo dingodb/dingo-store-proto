@@ -414,7 +414,7 @@ message DumpRegionResponse {
     bytes key = 20;  // for server inner use
   }
 
-  message Ducument {
+  message Document {
     int64 document_id = 1;
     int64 ts = 2;
     ValueFlag flag = 3;
@@ -426,7 +426,7 @@ message DumpRegionResponse {
   message Data {
     repeated KV kvs = 100;
     repeated Vector vectors = 101;
-    repeated Ducument ducuments = 102;
+    repeated Document documents = 102;
   }
 
   dingodb.pb.common.ResponseInfo response_info = 1;
