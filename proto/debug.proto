@@ -167,6 +167,7 @@ enum DebugType {
   STORE_METRICS = 9;
   STORE_REGION_CHANGE_RECORD = 10;
   INDEX_VECTOR_INDEX_METRICS = 100;
+  TS_PROVIDER_METRICS = 110;
 }
 
 message DebugRequest {
@@ -255,6 +256,19 @@ message DebugResponse {
     repeated VectorIndexMetricsEntry entries = 1;
   }
 
+  message TsProviderMetrics {
+    uint64 get_ts_count = 1;
+    uint64 get_ts_fail_count = 2;
+    uint64 renew_epoch = 3;
+
+    int64 actual_active_count = 4;
+    int64 active_count = 5;
+    int64 actual_dead_count = 6;
+    int64 dead_count = 7;
+
+    int64 last_physical = 8;
+  }
+
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
 
@@ -269,6 +283,7 @@ message DebugResponse {
   StoreMetrics store_metrics = 18;
   RegionChange region_change_record = 19;
   VectorIndexMetrics vector_index_metrics = 20;
+  TsProviderMetrics ts_provider_metrics = 21;
 }
 
 message GetMemoryStatsRequest {
