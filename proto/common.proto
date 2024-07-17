@@ -1100,3 +1100,13 @@ enum DiskANNCoreState {
   kIdle = 17;
   kFailed = 18;
 }
+
+enum SchemaState {
+  STATE_NONE = 0;
+  DELETE_ONLY = 1;
+  WRITE_ONLY = 2;
+  WRITE_REORG = 3;
+  DELETE_REORG = 4;
+  PUBLIC = 5;
+  GLOBAL_TXN_ONLY = 7;
+}
