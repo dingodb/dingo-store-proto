@@ -100,17 +100,20 @@ message VectorPushDataRequest {
   // vector data
   repeated dingodb.pb.common.Vector vectors = 3;
 
+  // vector id
+  repeated int64 vector_ids = 4;
+
   // Is there any data behind. ture : has data ; false : no data
-  bool has_more = 4;
+  bool has_more = 5;
 
   // If an error occurs, cancel this round of data transmission.
-  dingodb.pb.error.Error error = 5;
+  dingodb.pb.error.Error error = 6;
 
   // If true, force to load data even if file already exist.
-  bool force_to_load_data_if_exist = 6;
+  bool force_to_load_data_if_exist = 7;
 
   // The number of vectors already sent in this round of data transmission. (Not including this)
-  int64 already_send_vector_count = 7;
+  int64 already_send_vector_count = 8;
 }
 
 message VectorPushDataResponse {
@@ -156,6 +159,22 @@ message VectorLoadResponse {
   dingodb.pb.error.Error error = 2;
 }
 
+message VectorTryLoadRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+
+  // vector index ID is equivalent to region_id
+  int64 vector_index_id = 2;
+
+  dingodb.pb.common.LoadDiskAnnParam load_param = 3;
+}
+
+message VectorTryLoadResponse {
+  // response info
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  // error code
+  dingodb.pb.error.Error error = 2;
+}
+
 message VectorSearchRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   // vector index ID is equivalent to region_id
@@ -181,6 +200,8 @@ message VectorResetRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   // vector index ID is equivalent to region_id
   int64 vector_index_id = 2;
+  // If true, delete data file after reset.
+  bool delete_data_file = 3;
 }
 
 message VectorResetResponse {
@@ -224,7 +245,8 @@ message VectorStatusResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   // error code
   dingodb.pb.error.Error error = 2;
-  // TODO:
+
+  dingodb.pb.common.DiskANNCoreState state = 3;
 }
 
 message VectorDumpRequest {
@@ -237,7 +259,8 @@ message VectorDumpResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   // error code
   dingodb.pb.error.Error error = 2;
-  // TODO:
+
+  string dump_data = 3;
 }
 
 service DiskAnnService {
@@ -246,6 +269,7 @@ service DiskAnnService {
   rpc VectorPushData(VectorPushDataRequest) returns (VectorPushDataResponse);
   rpc VectorBuild(VectorBuildRequest) returns (VectorBuildResponse);
   rpc VectorLoad(VectorLoadRequest) returns (VectorLoadResponse);
+  rpc VectorTryLoad(VectorTryLoadRequest) returns (VectorTryLoadResponse);
   rpc VectorSearch(VectorSearchRequest) returns (VectorSearchResponse);
   rpc VectorReset(VectorResetRequest) returns (VectorResetResponse);
   rpc VectorClose(VectorCloseRequest) returns (VectorCloseResponse);

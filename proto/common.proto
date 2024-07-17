@@ -1078,3 +1078,25 @@ message DocumentIndexMetrics {
   // json parameter
   string json_parameter = 6;
 }
+
+enum DiskANNCoreState {
+  kUnknown = 0;
+  kImporting = 1;
+  kImported = 2;
+  kUninitialized = 3;
+  kInitialized = 4;
+  kBuilding = 5;
+  kBuilded = 6;
+  kUpdatingPath = 7;
+  kUpdatedPath = 8;
+  kLoading = 9;
+  kLoaded = 10;
+  kSearing = 11;
+  kSearched = 12;
+  kReseting = 13;
+  kReset = 14;
+  kDestroying = 15;
+  kDestroyed = 16;
+  kIdle = 17;
+  kFailed = 18;
+}
