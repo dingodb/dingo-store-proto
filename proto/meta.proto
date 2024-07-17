@@ -170,6 +170,7 @@ message TableDefinition {
   string comment = 60;
   string table_type = 61;
   string row_format = 62;
+  dingodb.pb.common.SchemaState schemaState = 63;
 
   int64 revision = 100;
 }
