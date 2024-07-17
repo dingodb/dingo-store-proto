@@ -18,6 +18,7 @@ import "common.proto";
 import "error.proto";
 import "coordinator.proto";
 import "store_internal.proto";
+import "store.proto";
 
 package dingodb.pb.debug;
 
@@ -397,8 +398,9 @@ message DumpRegionRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
 
   int64 region_id = 2;
-  int64 offset = 3;
-  int64 limit = 4;
+  dingodb.pb.common.Range range = 3;
+  int64 offset = 10;
+  int64 limit = 11;
 }
 
 message DumpRegionResponse {
@@ -438,16 +440,50 @@ message DumpRegionResponse {
     dingodb.pb.common.Document document = 10;
   }
 
+  message Txn {
+    message Data {
+      bytes key = 1;
+      int64 ts = 2;
+      ValueFlag flag = 3;
+      int64 ttl = 4;
+      bytes value = 5;
+
+      int64 partition_id = 10;
+    }
+
+    message Lock {
+      bytes key = 1;
+      dingodb.pb.store.LockInfo lock_info = 2;
+
+      int64 partition_id = 10;
+    }
+
+    message Write {
+      bytes key = 1;
+      int64 ts = 2;
+      dingodb.pb.store.WriteInfo write_info = 3;
+      int64 partition_id = 10;
+    }
+
+    repeated Data datas = 1;
+    repeated Lock locks = 2;
+    repeated Write writes = 3;
+  }
+
   message Data {
     repeated KV kvs = 100;
     repeated Vector vectors = 101;
     repeated Document documents = 102;
+
+    Txn txn = 200;
   }
 
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
 
   Data data = 3;
+
+  int64 table_id = 4;
 }
 
 service DebugService {
