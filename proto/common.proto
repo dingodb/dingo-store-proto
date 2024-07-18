@@ -246,6 +246,7 @@ message Executor {
   string resource_tag = 6;         // only updated by coordinator
   int64 create_timestamp = 7;      // only updated by coordinator
   int64 last_seen_timestamp = 8;   // only updated by coordinator
+  string cluster_name = 9;         // executor cluster name for multi tenant
 }
 
 message ExecutorMap {
