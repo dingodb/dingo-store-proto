@@ -725,6 +725,7 @@ message UpdateExecutorUserResponse {
 message GetExecutorMapRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   int64 epoch = 2;
+  string cluster_name = 3;  // executor cluster name, if cluster_name is empty return all executor map
 }
 
 message GetExecutorMapResponse {
