@@ -444,6 +444,7 @@ message HelloResponse {
 message GetRegionMapRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   int64 epoch = 2;
+  int64 tenant_id = 3;  // Get all the region maps belonging to this tenant_id.
 }
 
 message GetRegionMapResponse {
