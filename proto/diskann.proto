@@ -107,13 +107,19 @@ message VectorPushDataRequest {
   bool has_more = 5;
 
   // If an error occurs, cancel this round of data transmission.
-  dingodb.pb.error.Error error = 6;
+  dingodb.pb.error.Errno error = 6;
 
   // If true, force to load data even if file already exist.
   bool force_to_load_data_if_exist = 7;
 
   // The number of vectors already sent in this round of data transmission. (Not including this)
   int64 already_send_vector_count = 8;
+
+  // data version
+  int64 ts = 9;
+
+  // unique transaction id
+  int64 tso = 10;
 }
 
 message VectorPushDataResponse {
@@ -124,6 +130,12 @@ message VectorPushDataResponse {
 
   // The number of vectors already sent in this round of data transmission.
   int64 already_send_vector_count = 3;
+
+  // last error code
+  dingodb.pb.error.Error last_error = 4;
+
+  // current state of the index
+  dingodb.pb.common.DiskANNCoreState state = 5;
 }
 
 message VectorBuildRequest {
@@ -141,6 +153,12 @@ message VectorBuildResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   // error code
   dingodb.pb.error.Error error = 2;
+
+  // last error code
+  dingodb.pb.error.Error last_error = 3;
+
+  // current state of the index
+  dingodb.pb.common.DiskANNCoreState state = 4;
 }
 
 message VectorLoadRequest {
@@ -157,6 +175,12 @@ message VectorLoadResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   // error code
   dingodb.pb.error.Error error = 2;
+
+  // last error code
+  dingodb.pb.error.Error last_error = 3;
+
+  // current state of the index
+  dingodb.pb.common.DiskANNCoreState state = 4;
 }
 
 message VectorTryLoadRequest {
@@ -173,6 +197,12 @@ message VectorTryLoadResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   // error code
   dingodb.pb.error.Error error = 2;
+
+  // last error code
+  dingodb.pb.error.Error last_error = 3;
+
+  // current state of the index
+  dingodb.pb.common.DiskANNCoreState state = 4;
 }
 
 message VectorSearchRequest {
@@ -193,6 +223,13 @@ message VectorSearchResponse {
   // error code
   dingodb.pb.error.Error error = 2;
   repeated dingodb.pb.index.VectorWithDistanceResult batch_results = 3;
+  int64 ts = 4;
+
+  // last error code
+  dingodb.pb.error.Error last_error = 5;
+
+  // current state of the index
+  dingodb.pb.common.DiskANNCoreState state = 6;
 }
 
 // Resets this object to its state before loading data.
@@ -209,6 +246,11 @@ message VectorResetResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   // error code
   dingodb.pb.error.Error error = 2;
+  // last error code
+  dingodb.pb.error.Error last_error = 3;
+
+  // current state of the index
+  dingodb.pb.common.DiskANNCoreState state = 4;
 }
 
 message VectorCloseRequest {
@@ -221,6 +263,12 @@ message VectorCloseResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   // error code
   dingodb.pb.error.Error error = 2;
+
+  // last error code
+  dingodb.pb.error.Error last_error = 3;
+
+  // current state of the index
+  dingodb.pb.common.DiskANNCoreState state = 4;
 }
 
 message VectorDestroyRequest {
@@ -233,6 +281,12 @@ message VectorDestroyResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   // error code
   dingodb.pb.error.Error error = 2;
+
+  // last error code
+  dingodb.pb.error.Error last_error = 3;
+
+  // current state of the index
+  dingodb.pb.common.DiskANNCoreState state = 4;
 }
 
 message VectorStatusRequest {
@@ -246,7 +300,31 @@ message VectorStatusResponse {
   // error code
   dingodb.pb.error.Error error = 2;
 
-  dingodb.pb.common.DiskANNCoreState state = 3;
+  // last error code
+  dingodb.pb.error.Error last_error = 3;
+
+  dingodb.pb.common.DiskANNCoreState state = 4;
+}
+
+message VectorCountRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  // vector index ID is equivalent to region_id
+  int64 vector_index_id = 2;
+}
+
+message VectorCountResponse {
+  // response info
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  // error code
+  dingodb.pb.error.Error error = 2;
+
+  int64 count = 3;
+
+  // last error code
+  dingodb.pb.error.Error last_error = 4;
+
+  // current state of the index
+  dingodb.pb.common.DiskANNCoreState state = 5;
 }
 
 message VectorDumpRequest {
@@ -263,6 +341,19 @@ message VectorDumpResponse {
   string dump_data = 3;
 }
 
+message VectorDumpAllRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+}
+
+message VectorDumpAllResponse {
+  // response info
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  // error code
+  dingodb.pb.error.Error error = 2;
+
+  repeated string dump_datas = 3;
+}
+
 service DiskAnnService {
   // vector index
   rpc VectorNew(VectorNewRequest) returns (VectorNewResponse);
@@ -275,7 +366,9 @@ service DiskAnnService {
   rpc VectorClose(VectorCloseRequest) returns (VectorCloseResponse);
   rpc VectorDestroy(VectorDestroyRequest) returns (VectorDestroyResponse);
   rpc VectorStatus(VectorStatusRequest) returns (VectorStatusResponse);
+  rpc VectorCount(VectorCountRequest) returns (VectorCountResponse);
 
   // debug
   rpc VectorDump(VectorDumpRequest) returns (VectorDumpResponse);
+  rpc VectorDumpAll(VectorDumpAllRequest) returns (VectorDumpAllResponse);
 }

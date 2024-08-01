@@ -690,7 +690,9 @@ message BuildIvfFlatParam {}
 message BuildIvfPqParam {}
 message BuildHNSWParam {}
 message BuildDiskAnnParam {
-  bool force_to_build_if_exist = 1;  // if true, force to build even if file already exist. default is false.
+  // this parameter is deprecated. If you want to rebuild, use index.proto VectorReset Rpc .
+  // [deprecated] if true, force to build even if file already exist. default is false.
+  bool force_to_build_if_exist = 1;
 }
 
 message VectorBuildParameter {
@@ -717,6 +719,11 @@ message LoadDiskAnnParam {
   // Whether to warm up the index. If true, the index will be loaded into memory and kept in memory for faster.
   // (default is true): required.
   bool warmup = 2;
+
+  // if true, direct load without build index. default is false.
+  // Note: If it is true, do not call the import build interface, call load directly.
+  // If it is false, first import the data, then build, and then call load
+  bool direct_load_without_build = 3;
 }
 
 message VectorLoadParameter {
@@ -727,6 +734,24 @@ message VectorLoadParameter {
     LoadIvfPqParam ivf_pq = 3;
     LoadHNSWParam hnsw = 4;
     LoadDiskAnnParam diskann = 5;
+  }
+}
+
+message StateFlatParam {}
+message StateIvfFlatParam {}
+message StateIvfPqParam {}
+message StateHNSWParam {}
+message StateDiskAnnParam {
+  DiskANNCoreState state = 1;
+}
+
+message VectorStateParameter {
+  oneof state {
+    StateFlatParam flat = 1;
+    StateIvfFlatParam ivf_flat = 2;
+    StateIvfPqParam ivf_pq = 3;
+    StateHNSWParam hnsw = 4;
+    StateDiskAnnParam diskann = 5;
   }
 }
 
@@ -1081,25 +1106,25 @@ message DocumentIndexMetrics {
 }
 
 enum DiskANNCoreState {
-  kUnknown = 0;
-  kImporting = 1;
-  kImported = 2;
-  kUninitialized = 3;
-  kInitialized = 4;
-  kBuilding = 5;
-  kBuilded = 6;
-  kUpdatingPath = 7;
-  kUpdatedPath = 8;
-  kLoading = 9;
-  kLoaded = 10;
-  kSearing = 11;
-  kSearched = 12;
-  kReseting = 13;
-  kReset = 14;
-  kDestroying = 15;
-  kDestroyed = 16;
-  kIdle = 17;
-  kFailed = 18;
+  UNKNOWN = 0;
+  IMPORTING = 1;
+  IMPORTED = 2;
+  UNINITIALIZED = 3;
+  INITIALIZED = 4;
+  BUILDING = 5;
+  BUILDED = 6;
+  UPDATINGPATH = 7;
+  UPDATEDPATH = 8;
+  LOADING = 9;
+  LOADED = 10;
+  SEARING = 11;
+  SEARCHED = 12;
+  RESETING = 13;
+  RESET = 14;
+  DESTROYING = 15;
+  DESTROYED = 16;
+  IDLE = 17;
+  FAILED = 18;
 }
 
 enum SchemaState {

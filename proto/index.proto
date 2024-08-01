@@ -265,6 +265,8 @@ message VectorImportRequest {
 
   // Delete data from rocksdb. This operation will not involve vector indexes.
   repeated int64 delete_ids = 4;
+
+  int64 ttl = 5;  // duration time, unit ms
 }
 
 message VectorImportResponse {
@@ -275,29 +277,47 @@ message VectorImportResponse {
   // error is marked as IN Progress. You need to call VectorStatus to check
   // the current status.
   dingodb.pb.error.Error error = 2;
+
+  int64 ttl = 3;
 }
 
 message VectorBuildRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   dingodb.pb.store.Context context = 2;
   dingodb.pb.common.VectorBuildParameter parameter = 3;
+  int64 ts = 4;
 }
+
 message VectorBuildResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   // This is a heavy operation and may take a long time. Return IN PROGRES
   // first. Then query via vector status RPC.
   dingodb.pb.error.Error error = 2;
+
+  // The build process takes a long time. The returned status is not very accurate. If you need to query the status in
+  // real time, you need to call index.proto VectorStatus. If the status changes to UPDATEDPATH, the build is complete.
+  dingodb.pb.common.VectorStateParameter state = 3;
 }
 
 message VectorLoadRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   dingodb.pb.store.Context context = 2;
   dingodb.pb.common.VectorLoadParameter parameter = 3;
+
+  // if true, directly load without going through the import build stage
+  // if the build is complete, set to true to speed up loading
+  bool direct_load = 4;
 }
+
 message VectorLoadResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
 
   dingodb.pb.error.Error error = 2;
+
+  // The loading process takes a long time. The returned status is not very accurate. If you need to query the status in
+  // real time, you need to call index.proto VectorStatus. If the status changes to LOADED at this time, it means that
+  // the loading is complete.
+  dingodb.pb.common.VectorStateParameter state = 3;
 }
 
 message VectorStatusRequest {
@@ -312,8 +332,49 @@ message VectorStatusResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
 
   // Query the internal status of the vector. The client determines the
-  // business flow based on the status.
+  // business flow based on the status.If you want to fix this error call index.proto VectorReset.
   dingodb.pb.error.Error error = 2;
+
+  // Query internal status of the vector.
+  dingodb.pb.common.VectorStateParameter state = 3;
+}
+
+// If the current vector is being built or loaded, executing the Reset operation may cause the DiskANN Server process to
+// crash.
+message VectorResetRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+
+  dingodb.pb.store.Context context = 2;
+
+  // If true, delete data file after reset.
+  bool delete_data_file = 3;
+}
+
+message VectorResetResponse {
+  // response info
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  // error code
+  dingodb.pb.error.Error error = 2;
+
+  dingodb.pb.common.VectorStateParameter state = 3;
+}
+
+message VectorDumpRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+
+  dingodb.pb.store.Context context = 2;
+
+  // If true, dump all vector id data from diskann. or just dump the data of this region.
+  bool dump_all = 3;
+}
+
+message VectorDumpResponse {
+  // response info
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  // error code
+  dingodb.pb.error.Error error = 2;
+
+  repeated string dump_datas = 3;
 }
 
 message VectorGetParameter {
@@ -362,6 +423,8 @@ service IndexService {
   rpc VectorBuild(VectorBuildRequest) returns (VectorBuildResponse);
   rpc VectorLoad(VectorLoadRequest) returns (VectorLoadResponse);
   rpc VectorStatus(VectorStatusRequest) returns (VectorStatusResponse);
+  rpc VectorReset(VectorResetRequest) returns (VectorResetResponse);
+  rpc VectorDump(VectorDumpRequest) returns (VectorDumpResponse);
 
   // debug
   // test  vector search performance
