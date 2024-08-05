@@ -251,6 +251,17 @@ message VectorCountResponse {
   int64 count = 3;
 }
 
+message VectorCountMemoryRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  dingodb.pb.store.Context context = 2;
+}
+
+message VectorCountMemoryResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+  int64 count = 3;
+}
+
 message VectorImportRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   dingodb.pb.store.Context context = 2;
@@ -303,10 +314,6 @@ message VectorLoadRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   dingodb.pb.store.Context context = 2;
   dingodb.pb.common.VectorLoadParameter parameter = 3;
-
-  // if true, directly load without going through the import build stage
-  // if the build is complete, set to true to speed up loading
-  bool direct_load = 4;
 }
 
 message VectorLoadResponse {
@@ -419,6 +426,7 @@ service IndexService {
   rpc VectorScanQuery(VectorScanQueryRequest) returns (VectorScanQueryResponse);
   rpc VectorGetRegionMetrics(VectorGetRegionMetricsRequest) returns (VectorGetRegionMetricsResponse);
   rpc VectorCount(VectorCountRequest) returns (VectorCountResponse);
+  rpc VectorCountMemory(VectorCountMemoryRequest) returns (VectorCountMemoryResponse);
   rpc VectorImport(VectorImportRequest) returns (VectorImportResponse);
   rpc VectorBuild(VectorBuildRequest) returns (VectorBuildResponse);
   rpc VectorLoad(VectorLoadRequest) returns (VectorLoadResponse);
