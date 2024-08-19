@@ -81,6 +81,7 @@ message ColumnDefinition {
   int32 state = 20;
 
   string comment = 30;
+  dingodb.pb.common.SchemaState schemaState = 31;
 
   uint32 create_version = 51;
   uint32 update_version = 52;
