@@ -1046,9 +1046,15 @@ message DocumentValue {
   ScalarField field_value = 2;
 }
 
+message TableData {
+  bytes table_key = 1;    // table primary key of this document
+  bytes table_value = 2;  // table value of this document
+}
+
 message Document {
   // scalar data of this document, key: scalar key, value: scalar value data.
   map<string, DocumentValue> document_data = 1;
+  TableData table_data = 2;  // table data of this document, only SQL can use this field
 }
 
 message DocumentWithId {
@@ -1077,6 +1083,7 @@ message DocumentSearchParameter {
   bool without_scalar_data = 10;       // Default false, if true, response without scalar data.
   repeated string selected_keys = 11;  // If without_scalar_data is false, selected_keys is used to select scalar data,
                                        // if this parameter is null, all scalar data will be returned.
+  bool without_table_data = 12;        // Default false, if true, response without table data
 }
 
 message DocumentWithScore {
