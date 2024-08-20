@@ -56,6 +56,9 @@ message DocumentBatchQueryRequest {
   // if this parameter is null, all scalar data will be returned.
   repeated string selected_keys = 5;
 
+  // Default false, if true, response without table data.
+  bool without_table_data = 6;
+
   int64 ts = 10;
 }
 
@@ -86,6 +89,9 @@ message DocumentScanQueryRequest {
   // If without_scalar_data is false, selected_keys is used to select scalar data,
   // if this parameter is null, all scalar data will be returned.
   repeated string selected_keys = 13;
+
+  // Default false, if true, response without table data.
+  bool without_table_data = 14;
 
   int64 ts = 20;
 }
