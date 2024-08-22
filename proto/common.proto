@@ -383,7 +383,8 @@ enum ScalarFieldType {
   DOUBLE = 7;   // for vector and document
   STRING = 8;   // for vector is string, for document is text with tokenizer
   BYTES = 9;  // for document only, is binary data, no tokenizer is used, not implemented now, will be used in the near
-              // future
+  DATETIME = 10;  // for document only, datetime values must be provided in rfc3339 format, such as 1970-01-01T00:00:00Z
+                  // future
 }
 
 message ScalarField {
@@ -395,6 +396,7 @@ message ScalarField {
     double double_data = 5;
     string string_data = 6;
     bytes bytes_data = 7;
+    string datetime_data = 8;
   }
 }
 
