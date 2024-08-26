@@ -789,6 +789,8 @@ message IndexParameter {
   VectorIndexParameter vector_index_parameter = 2;
   ScalarIndexParameter scalar_index_parameter = 3;
   DocumentIndexParameter document_index_parameter = 4;
+  repeated string origin_keys = 5;
+  repeated string origin_with_keys = 6;
 }
 
 message DocumentIndexParameter {
