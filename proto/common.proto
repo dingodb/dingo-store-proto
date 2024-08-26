@@ -782,6 +782,7 @@ message ScalarSchema {
 message ScalarIndexParameter {
   ScalarIndexType scalar_index_type = 1;
   bool is_unique = 2;  // for scalar index
+  repeated string originKeys = 3;
 }
 
 message IndexParameter {
@@ -789,6 +790,8 @@ message IndexParameter {
   VectorIndexParameter vector_index_parameter = 2;
   ScalarIndexParameter scalar_index_parameter = 3;
   DocumentIndexParameter document_index_parameter = 4;
+  repeated string originKeys = 5;
+  repeated string originWithKeys = 6;
 }
 
 message DocumentIndexParameter {
