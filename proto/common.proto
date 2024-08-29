@@ -722,6 +722,7 @@ message LoadDiskAnnParam {
   // (default is true): required.
   bool warmup = 2;
 
+  // deprecated index process internal automatic guessing.
   // if true, direct load without build index. default is false.
   // Note: If it is true, do not call the import build interface, call load directly.
   // If it is false, first import the data, then build, and then call load
@@ -744,7 +745,8 @@ message StateIvfFlatParam {}
 message StateIvfPqParam {}
 message StateHNSWParam {}
 message StateDiskAnnParam {
-  DiskANNCoreState state = 1;
+  DiskANNState diskann_state = 1;
+  DiskANNCoreState state = 2;
 }
 
 message VectorStateParameter {
@@ -1136,6 +1138,19 @@ enum DiskANNCoreState {
   DESTROYED = 16;
   IDLE = 17;
   FAILED = 18;
+  FAKEBUILDED = 19;
+  NODATA = 20;
+}
+
+enum DiskANNState {
+  DISKANN_INITIALIZED = 0;
+  DISKANN_BUILDING = 1;
+  DISKANN_BUILDED = 2;
+  DISKANN_BUILD_FAILED = 3;
+  DISKANN_LOADING = 4;
+  DISKANN_LOADED = 5;
+  DISKANN_LOAD_FAILED = 6;
+  DISKANN_NODATA = 7;
 }
 
 enum SchemaState {

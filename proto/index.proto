@@ -344,6 +344,9 @@ message VectorStatusResponse {
 
   // Query internal status of the vector.
   dingodb.pb.common.VectorStateParameter state = 3;
+
+  // Internal Focus Errors
+  dingodb.pb.error.Error internal_error = 5;
 }
 
 // If the current vector is being built or loaded, executing the Reset operation may cause the DiskANN Server process to
@@ -353,6 +356,7 @@ message VectorResetRequest {
 
   dingodb.pb.store.Context context = 2;
 
+  // deprecated this var force to true
   // If true, delete data file after reset.
   bool delete_data_file = 3;
 }
@@ -363,6 +367,7 @@ message VectorResetResponse {
   // error code
   dingodb.pb.error.Error error = 2;
 
+  // deprecated
   dingodb.pb.common.VectorStateParameter state = 3;
 }
 
