@@ -119,3 +119,15 @@ message LogMeta {
   int64 first_log_index = 1;
   int64 vector_index_first_log_index = 2;
 }
+
+message LogIndexMeta {
+  message TruncateIndex {
+    int32 client_type = 1;
+    int64 truncate_index = 2;
+  }
+
+  int64 first_log_index = 1;
+  int64 last_log_index = 2;
+
+  repeated TruncateIndex truncate_indexes = 3;
+}
