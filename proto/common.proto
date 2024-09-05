@@ -1130,7 +1130,7 @@ enum DiskANNCoreState {
   UPDATEDPATH = 8;
   LOADING = 9;
   LOADED = 10;
-  SEARING = 11;
+  SEARCHING = 11;
   SEARCHED = 12;
   RESETING = 13;
   RESET = 14;
