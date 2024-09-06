@@ -774,6 +774,10 @@ message TxnPrewriteRequest {
   // for both pessimistic and optimistic transaction
   // the extra_data executor want to store in lock
   repeated LockExtraData lock_extra_datas = 12;
+
+  // If min_commit_ts > 0, this is a large transaction request, the final commit_ts
+  // will be inferred from `min_commit_ts`.
+  int64 min_commit_ts = 13;
 }
 
 message TxnPrewriteResponse {
