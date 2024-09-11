@@ -247,6 +247,7 @@ message Executor {
   int64 create_timestamp = 7;      // only updated by coordinator
   int64 last_seen_timestamp = 8;   // only updated by coordinator
   string cluster_name = 9;         // executor cluster name for multi tenant
+  string leader_id = 10;           // sdk set this field in heartbeat, only updated by sdk
 }
 
 message ExecutorMap {
