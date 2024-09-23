@@ -148,6 +148,7 @@ message TriggerSaveVectorIndexResponse {
 message CompactRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   string cf_name = 2;
+  dingodb.pb.common.RawEngine raw_engine = 3;
 }
 
 message CompactResponse {
