@@ -930,6 +930,7 @@ message TransferLeaderRegionRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   int64 region_id = 2;
   int64 leader_store_id = 3;
+  bool is_force = 4;
 }
 
 message TransferLeaderRegionResponse {
