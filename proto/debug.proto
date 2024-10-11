@@ -169,6 +169,7 @@ enum DebugType {
   STORE_METRICS = 9;
   STORE_REGION_CHANGE_RECORD = 10;
   INDEX_VECTOR_INDEX_METRICS = 100;
+  DOCUMENT_INDEX_METRICS = 101;
   TS_PROVIDER_METRICS = 110;
 }
 
@@ -258,6 +259,29 @@ message DebugResponse {
     repeated VectorIndexMetricsEntry entries = 1;
   }
 
+  message RawDocumentIndexState {
+    int64 id = 1;
+    int64 apply_log_id = 10;
+    dingodb.pb.common.RegionEpoch epoch = 12;
+    string start_key = 20;
+    string end_key = 21;
+    dingodb.pb.common.DocumentIndexParameter parameter = 30;
+    string comment = 40;
+  }
+
+  message DocumentIndexMetricsEntry {
+    int64 id = 1;
+    int64 version = 2;
+    int64 last_build_epoch_version = 3;
+    int64 apply_log_index = 20;
+
+    repeated RawDocumentIndexState entries = 70;
+  }
+
+  message DocumentIndexMetrics {
+    repeated DocumentIndexMetricsEntry entries = 1;
+  }
+
   message TsProviderMetrics {
     uint64 get_ts_count = 1;
     uint64 get_ts_fail_count = 2;
@@ -286,6 +310,7 @@ message DebugResponse {
   RegionChange region_change_record = 19;
   VectorIndexMetrics vector_index_metrics = 20;
   TsProviderMetrics ts_provider_metrics = 21;
+  DocumentIndexMetrics document_index_metrics = 22;
 }
 
 message GetMemoryStatsRequest {
