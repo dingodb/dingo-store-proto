@@ -346,6 +346,25 @@ message VectorSetNoDataResponse {
   dingodb.pb.common.DiskANNCoreState state = 4;
 }
 
+message VectorSetImportTooManyRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  // vector index ID is equivalent to region_id
+  int64 vector_index_id = 2;
+}
+
+message VectorSetImportTooManyResponse {
+  // response info
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  // error code
+  dingodb.pb.error.Error error = 2;
+
+  // last error code
+  dingodb.pb.error.Error last_error = 3;
+
+  // current state of the index
+  dingodb.pb.common.DiskANNCoreState state = 4;
+}
+
 message VectorDumpRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   int64 vector_index_id = 2;
@@ -387,6 +406,7 @@ service DiskAnnService {
   rpc VectorStatus(VectorStatusRequest) returns (VectorStatusResponse);
   rpc VectorCount(VectorCountRequest) returns (VectorCountResponse);
   rpc VectorSetNoData(VectorSetNoDataRequest) returns (VectorSetNoDataResponse);
+  rpc VectorSetImportTooMany(VectorSetImportTooManyRequest) returns (VectorSetImportTooManyResponse);
 
   // debug
   rpc VectorDump(VectorDumpRequest) returns (VectorDumpResponse);
