@@ -458,6 +458,8 @@ message LockInfo {
                              // write_info.short_value
   bytes extra_data = 9;      // the extra_data executor want to store in lock
   int64 min_commit_ts = 10;  // the min_commit_ts of the transaction
+  bool use_async_commit = 11;
+  repeated bytes secondaries = 12;  // the key list of all secondary for transactions that are using Async Commit.
 }
 
 message WriteInfo {
@@ -778,6 +780,11 @@ message TxnPrewriteRequest {
   // If min_commit_ts > 0, this is a large transaction request, the final commit_ts
   // will be inferred from `min_commit_ts`.
   int64 min_commit_ts = 13;
+
+  // When async commit is enabled, `secondaries` should be set as the key list of all secondary
+  // locks if the request prewrites the primary lock.
+  bool use_async_commit = 14;
+  repeated bytes secondaries = 15;
 }
 
 message TxnPrewriteResponse {
@@ -801,7 +808,11 @@ message TxnPrewriteResponse {
   // field will be set to the commit ts of the transaction. Otherwise, if dingo-store
   // failed to commit it with 1PC or the transaction is not 1PC, the value will
   // be 0.
-  int64 one_pc_commit_ts = 5;  // NOT IMPLEMENTED
+  int64 one_pc_commit_ts = 5;
+  // 0 if the min_commit_ts is not ready or any other reason that async
+  // commit cannot proceed. The client can then fallback to normal way to
+  // continue committing the transaction if prewrite are all finished.
+  uint64 min_commit_ts = 6;
 }
 
 message TxnCommitRequest {
