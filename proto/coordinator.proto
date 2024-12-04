@@ -1118,6 +1118,26 @@ message BalanceLeaderResponse {
   repeated TransferLeaderTask tasks = 12;
 }
 
+message BalanceRegionRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  dingodb.pb.common.StoreType store_type = 2;
+  bool dryrun = 3;
+}
+
+message BalanceRegionResponse {
+  message ChangePeerTask {
+    int64 region_id = 1;
+    int64 source_store_id = 2;
+    int64 target_store_id = 3;
+  }
+
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+
+  string score = 3;
+  ChangePeerTask task = 4;
+}
+
 message CreateIdsRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   IdEpochType id_epoch_type = 2;
@@ -1201,6 +1221,8 @@ service CoordinatorService {
 
   // Balance leader
   rpc BalanceLeader(BalanceLeaderRequest) returns (BalanceLeaderResponse);
+
+  rpc BalanceRegion(BalanceRegionRequest) returns (BalanceRegionResponse);
 
   // CreateIds
   rpc CreateIds(CreateIdsRequest) returns (CreateIdsResponse);
