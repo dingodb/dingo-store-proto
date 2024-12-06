@@ -1066,19 +1066,29 @@ message UpdateGCSafePointRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   int64 safe_point = 2;  // this is for default tenant
   GcFlagType gc_flag = 3;
+  int64 resolve_lock_safe_point = 4;  // this is for default tenant already resolved lock ts
 
   // if tenant_safe_points is not null, coordinator will update tenant's safe point in this map
   map<int64, int64> tenant_safe_points = 5;
+
+  // this is for except default tenant already resolved lock resolved lock ts
+  // key is tenant_id, value is safe_point
+  map<int64, int64> tenant_resolve_lock_safe_points = 6;
 }
 
 message UpdateGCSafePointResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
-  int64 new_safe_point = 3;  // this for default tenant
-  bool gc_stop = 4;          // if this is true, store will not do gc.
+  int64 new_safe_point = 3;               // this for default tenant
+  bool gc_stop = 4;                       // if this is true, store will not do gc.
+  int64 new_resolve_lock_safe_point = 5;  // this is for default tenant already resolved lock ts
 
   // if tenant_safe_points is not null, this field is filled
   map<int64, int64> tenant_safe_points = 6;  // if get_all_tenant is true, this field is filled
+
+  // this is for except default tenant already resolved lock resolved lock ts
+  // key is tenant_id, value is safe_point
+  map<int64, int64> tenant_resolve_lock_safe_points = 7;
 }
 
 message GetGCSafePointRequest {
@@ -1095,6 +1105,11 @@ message GetGCSafePointResponse {
   int64 safe_point = 3;                      // this is the safe_point of default tenant
   bool gc_stop = 4;                          // if this is true, store will not do gc.
   map<int64, int64> tenant_safe_points = 5;  // for other tenants that are not default tenant
+
+  int64 resolve_lock_safe_point = 6;  // this is for default tenant already resolved lock ts
+  // this is for except default tenant already resolved lock resolved lock ts
+  // key is tenant_id, value is safe_point
+  map<int64, int64> tenant_resolve_lock_safe_points = 7;
 }
 
 message BalanceLeaderRequest {
