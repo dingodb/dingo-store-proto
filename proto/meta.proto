@@ -113,6 +113,7 @@ message HashPartition {
 message Partition {
   DingoCommonId id = 1;               // this is really part id, its parent entity is table
   dingodb.pb.common.Range range = 2;  // the count of ranges must be equal to the count of id
+  string name = 3;
 }
 
 message PartitionRule {
@@ -172,6 +173,7 @@ message TableDefinition {
   string table_type = 61;
   string row_format = 62;
   dingodb.pb.common.SchemaState schemaState = 63;
+  bool visible = 64;
 
   int64 revision = 100;
 }
