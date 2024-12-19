@@ -1220,3 +1220,25 @@ enum SchemaState {
   SCHEMA_PUBLIC = 5;
   SCHEMA_GLOBAL_TXN_ONLY = 6;
 }
+
+message MDS {
+  enum OnlineState {
+    Online = 0;
+    Offline = 1;
+  }
+
+  enum State {
+    INIT = 0;
+    NORMAL = 1;
+    ABNORMAL = 2;
+  }
+
+  int64 id = 1;
+  dingodb.pb.common.Location location = 2;
+
+  OnlineState online_state = 3;
+  State state = 4;
+
+  uint64 register_time_ms = 10;
+  uint64 last_online_time_ms = 11;
+}
