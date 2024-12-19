@@ -42,6 +42,7 @@ enum IdEpochType {
   EPOCH_REGION = 15;
   EPOCH_TABLE = 16;
   EPOCH_INDEX = 17;
+  EPOCH_MDS = 18;
 
   RAFT_APPLY_TERM = 21;
   RAFT_APPLY_INDEX = 22;
@@ -1165,6 +1166,28 @@ message CreateIdsResponse {
   repeated int64 ids = 3;
 }
 
+message MDSHeartbeatRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+
+  dingodb.pb.common.MDS mds = 10;
+}
+
+message MDSHeartbeatResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+}
+
+message GetMDSListRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+}
+
+message GetMDSListResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+
+  repeated dingodb.pb.common.MDS mdses = 10;
+}
+
 service CoordinatorService {
   // Hello, this is for coordinator and meta
   rpc Hello(HelloRequest) returns (HelloResponse);
@@ -1241,4 +1264,8 @@ service CoordinatorService {
 
   // CreateIds
   rpc CreateIds(CreateIdsRequest) returns (CreateIdsResponse);
+
+  // dingofs MDS
+  rpc MDSHeartbeat(MDSHeartbeatRequest) returns (MDSHeartbeatResponse);
+  rpc GetMDSList(GetMDSListRequest) returns (GetMDSListResponse);
 }

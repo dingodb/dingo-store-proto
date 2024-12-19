@@ -395,6 +395,13 @@ message MetaIncrementTenant {
   MetaIncrementOpType op_type = 3;
 }
 
+// MDS
+message MetaIncrementMDS {
+  int64 id = 1;
+  dingodb.pb.common.MDS mds = 2;
+  MetaIncrementOpType op_type = 3;
+}
+
 // MetaIncrement stores meta data need to be inserted or updated
 message MetaIncrement {
   repeated MetaIncrementCoordinator coordinators = 1;
@@ -429,6 +436,8 @@ message MetaIncrement {
   repeated MetaIncrementCommonMem common_mem_s = 52;
 
   repeated MetaIncrementTenant tenants = 53;
+
+  repeated MetaIncrementMDS mdses = 54;
 }
 
 message TsoStorage {
@@ -470,4 +479,6 @@ message MetaSnapshotFile {
   repeated dingodb.pb.common.KeyValue common_mem_map_kvs = 52;
 
   repeated dingodb.pb.common.KeyValue tenant_map_kvs = 53;
+
+  repeated dingodb.pb.common.KeyValue mds_map_kvs = 60;
 }
