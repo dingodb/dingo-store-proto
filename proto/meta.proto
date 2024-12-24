@@ -114,6 +114,7 @@ message Partition {
   DingoCommonId id = 1;               // this is really part id, its parent entity is table
   dingodb.pb.common.Range range = 2;  // the count of ranges must be equal to the count of id
   string name = 3;
+  dingodb.pb.common.SchemaState schemaState = 4;
 }
 
 message PartitionRule {
