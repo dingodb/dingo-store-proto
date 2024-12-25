@@ -17,6 +17,7 @@ syntax = "proto3";
 import "common.proto";
 import "error.proto";
 import "store.proto";
+import "stream.proto";
 
 package dingodb.pb.document;
 
@@ -125,6 +126,24 @@ message DocumentSearchResponse {
   repeated dingodb.pb.common.DocumentWithScore document_with_scores = 3;
 }
 
+message DocumentSearchAllRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  dingodb.pb.store.Context context = 2;
+  dingodb.pb.common.DocumentSearchParameter parameter = 3;
+  dingodb.pb.stream.StreamRequestMeta stream_meta = 4;
+}
+
+message DocumentSearchAllResponse {
+  // response info
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  // error code
+  dingodb.pb.error.Error error = 2;
+
+  repeated dingodb.pb.common.DocumentWithScore document_with_scores = 3;
+
+  dingodb.pb.stream.StreamResponseMeta stream_meta = 4;
+}
+
 message DocumentDeleteRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   dingodb.pb.store.Context context = 2;
@@ -207,6 +226,7 @@ service DocumentService {
   rpc DocumentAdd(DocumentAddRequest) returns (DocumentAddResponse);
   rpc DocumentBatchQuery(DocumentBatchQueryRequest) returns (DocumentBatchQueryResponse);
   rpc DocumentSearch(DocumentSearchRequest) returns (DocumentSearchResponse);
+  rpc DocumentSearchAll(DocumentSearchAllRequest) returns (DocumentSearchAllResponse);
   rpc DocumentDelete(DocumentDeleteRequest) returns (DocumentDeleteResponse);
   rpc DocumentGetBorderId(DocumentGetBorderIdRequest) returns (DocumentGetBorderIdResponse);
   rpc DocumentScanQuery(DocumentScanQueryRequest) returns (DocumentScanQueryResponse);
