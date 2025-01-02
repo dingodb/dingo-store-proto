@@ -175,6 +175,7 @@ message TableDefinition {
   string row_format = 62;
   dingodb.pb.common.SchemaState schemaState = 63;
   bool visible = 64;
+  uint32 codec_version = 65;
 
   int64 revision = 100;
 }
