@@ -694,6 +694,8 @@ message CoprocessorV2 {
 
   // Encoded binary of the relational expression pushed down.
   bytes rel_expr = 5;
+  
+  int32 codec_version = 6;
 }
 
 message VectorSearchParameter {
