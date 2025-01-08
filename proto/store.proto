@@ -257,6 +257,8 @@ message Coprocessor {
   // The list that needs to be aggregated is allowed to be empty, that is, not aggregated sum(salary), count(age),
   // count(salary). but group_by_columns is not allowed to be empty
   repeated AggregationOperator aggregation_operators = 7;
+ 
+  int32 codec_version = 8;
 }
 
 message KvScanBeginRequest {
