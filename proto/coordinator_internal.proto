@@ -83,6 +83,7 @@ message TenantInternal {
 
   int64 safe_point_ts = 20;
   int64 revision = 21;
+  int64 resolve_lock_safe_point = 22;
 }
 
 // SchemaInternal is storage structure for schema

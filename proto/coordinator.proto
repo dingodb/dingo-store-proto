@@ -60,6 +60,7 @@ enum IdEpochType {
   // for online ddl
   ID_SCHEMA_VERSION = 51;
   ID_DDL_JOB = 52;
+  ID_GC_RESOLVE_LOCK_SAFE_POINT = 53;
 }
 
 enum TaskPreCheckType {
@@ -1098,6 +1099,7 @@ message GetGCSafePointRequest {
   // else, the coordinator will return the safe_point_ts for all tenant in tenant_ids, including default tenant
   repeated int64 tenant_ids = 2;
   bool get_all_tenant = 3;  // if this is true, coordinator will return all tenant's safe point
+  repeated int64 tenant_resolve_lock_ids = 4;
 }
 
 message GetGCSafePointResponse {
@@ -1188,6 +1190,42 @@ message GetMDSListResponse {
   repeated dingodb.pb.common.MDS mdses = 10;
 }
 
+// backup & restore
+message RegisterBackupRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  string backup_name = 2;              // uuid
+  string backup_path = 3;              // backup path
+  int64 backup_start_timestamp = 4;    // backup start timestamp
+  int64 backup_current_timestamp = 5;  // backup current timestamp
+  int64 backup_timeout_s = 6;          // backup timeout in seconds
+}
+
+message RegisterBackupResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+}
+
+message UnRegisterBackupRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  string backup_name = 2;  // uuid
+}
+
+message UnRegisterBackupResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+}
+
+message ControlConfigRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  repeated dingodb.pb.common.ControlConfigVariable control_config_variable = 2;
+}
+
+message ControlConfigResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+  repeated dingodb.pb.common.ControlConfigVariable control_config_variable = 3;
+}
+
 service CoordinatorService {
   // Hello, this is for coordinator and meta
   rpc Hello(HelloRequest) returns (HelloResponse);
@@ -1268,4 +1306,9 @@ service CoordinatorService {
   // dingofs MDS
   rpc MDSHeartbeat(MDSHeartbeatRequest) returns (MDSHeartbeatResponse);
   rpc GetMDSList(GetMDSListRequest) returns (GetMDSListResponse);
+  
+  // backup & restore
+  rpc RegisterBackup(RegisterBackupRequest) returns (RegisterBackupResponse);
+  rpc UnRegisterBackup(UnRegisterBackupRequest) returns (UnRegisterBackupResponse);
+  rpc ControlConfig(ControlConfigRequest) returns (ControlConfigResponse);
 }

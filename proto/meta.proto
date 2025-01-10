@@ -134,6 +134,7 @@ message Tenant {
 
   int64 safe_point_ts = 20;
   int64 revision = 21;
+  int64 resolve_lock_safe_point_ts = 22;
 }
 
 // Schema
@@ -618,6 +619,10 @@ message TableIncrement {
   int64 start_id = 2;
 }
 
+message TableIncrementGroup {
+  repeated TableIncrement table_increments = 3;
+}
+
 message GetAutoIncrementsRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
 }
@@ -646,6 +651,16 @@ message CreateAutoIncrementRequest {
 }
 
 message CreateAutoIncrementResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+}
+
+message CreateAutoIncrementsRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  TableIncrementGroup table_increment_group = 2;
+}
+
+message CreateAutoIncrementsResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
 }
@@ -1129,6 +1144,56 @@ message GetTenantsResponse {
   repeated Tenant tenants = 3;
 }
 
+// backup & restore
+message TablesAndIndexes {
+  repeated TableDefinitionWithId tables = 1;
+  repeated IndexDefinitionWithId indexes = 2;
+}
+message Schemas {
+  repeated Schema schemas = 1;
+}
+
+message MetaALL {
+  repeated Tenant tenants = 1;
+
+  // key: tenant_id
+  map<int64, Schemas> schemas = 2;
+
+  // key: Schema DingoCommonId = (EntityType|int64|int64)
+  map<string, TablesAndIndexes> tables_and_indexes = 3;
+}
+
+message ExportMetaRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+}
+
+message ExportMetaResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+
+  MetaALL meta_all = 3;
+}
+
+message IdEpochTypeAndValueItem {
+  dingodb.pb.coordinator.IdEpochType type = 1;
+  int64 value = 2;
+}
+
+message IdEpochTypeAndValue {
+  repeated IdEpochTypeAndValueItem items = 1;
+}
+
+message SaveIdEpochTypeRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+}
+
+message SaveIdEpochTypeResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+
+  IdEpochTypeAndValue id_epoch_type_and_value = 3;
+}
+
 service MetaService {
   // Hello, this is for auto_increment
   rpc Hello(HelloRequest) returns (HelloResponse);
@@ -1299,6 +1364,11 @@ service MetaService {
   // out: error code
   rpc CreateAutoIncrement(CreateAutoIncrementRequest) returns (CreateAutoIncrementResponse);
 
+  // CreateAutoIncrement
+  // in: table_id start_id map
+  // out: error code
+  rpc CreateAutoIncrements(CreateAutoIncrementsRequest) returns (CreateAutoIncrementsResponse);
+
   // UpdateAutoIncrement
   // in: table_id start_id force
   // out: error code
@@ -1357,4 +1427,9 @@ service MetaService {
   // GetTenants
   // out: List<Tenant>
   rpc GetTenants(GetTenantsRequest) returns (GetTenantsResponse);
+
+  // backup & restore
+  rpc ExportMeta(ExportMetaRequest) returns (ExportMetaResponse);
+
+  rpc SaveIdEpochType(SaveIdEpochTypeRequest) returns (SaveIdEpochTypeResponse);
 }

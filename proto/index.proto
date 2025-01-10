@@ -462,4 +462,8 @@ service IndexService {
   rpc TxnHeartBeat(dingodb.pb.store.TxnHeartBeatRequest) returns (dingodb.pb.store.TxnHeartBeatResponse);
   rpc TxnGc(dingodb.pb.store.TxnGcRequest) returns (dingodb.pb.store.TxnGcResponse);
   rpc TxnDeleteRange(dingodb.pb.store.TxnDeleteRangeRequest) returns (dingodb.pb.store.TxnDeleteRangeResponse);
+
+  // backup & restore
+  rpc BackupData(dingodb.pb.store.BackupDataRequest) returns (dingodb.pb.store.BackupDataResponse);
+  rpc ControlConfig(dingodb.pb.store.ControlConfigRequest) returns (dingodb.pb.store.ControlConfigResponse);
 };
