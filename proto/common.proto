@@ -694,7 +694,7 @@ message CoprocessorV2 {
 
   // Encoded binary of the relational expression pushed down.
   bytes rel_expr = 5;
-  
+
   int32 codec_version = 6;
 }
 
@@ -1246,3 +1246,76 @@ message MDS {
   uint64 register_time_ms = 10;
   uint64 last_online_time_ms = 11;
 }
+// backup & restore start
+// Noop storage backend saves files into void.
+message Noop {}
+
+// Local storage backend saves files into local disk
+// currently not support local disk path
+message Local {
+  string path = 1;
+}
+
+message StorageBackend {
+  oneof backend {
+    Noop noop = 1;
+    Local local = 2;
+  }
+}
+
+// sst files or log files compression algorithm
+// for log files, unknown means not use compression algorithm
+enum CompressionType {
+  CT_UNKNOWN = 0;
+  CT_LZ4 = 1;
+  CT_SNAPPY = 2;
+  CT_ZSTD = 3;
+}
+
+message BackupDataFileValueSstMeta {
+  string cf = 1;          // column family
+  int64 region_id = 2;    // region id
+  string dir_name = 3;    // directory name
+  uint64 file_size = 4;   // file size
+  string encryption = 5;  // default sha1 of file content
+  string file_name = 6;   // file name
+}
+
+message BackupDataFileValueSstMetaGroup {
+  repeated BackupDataFileValueSstMeta backup_data_file_value_sst_metas = 1;
+}
+
+message BackupMeta {
+  string remark = 1;      // remark info
+  string exec_node = 2;   // restore exec node. exec node :  coordinator, store, index, document
+  string dir_name = 3;    // directory name
+  uint64 file_size = 4;   // file size
+  string encryption = 5;  // default sha1 of file content
+  string file_name = 6;   // file name
+}
+
+message BackupParam {
+  string coor_addr = 1;
+  string store_addr = 2;
+  string index_addr = 3;
+  string document = 4;
+  string br_type = 5;
+  string br_backup_type = 6;
+  string backupts = 7;
+  int64 backuptso_internal = 8;
+  string storage = 9;
+  string storage_internal = 10;
+}
+
+message ControlConfigVariable {
+  // gflags name
+  string name = 1;
+  // gflags value
+  string value = 2;
+  // is set or not
+  bool is_already_set = 3;
+  // is error or not
+  bool is_error_occurred = 4;
+}
+
+// backup & restore end

@@ -1182,6 +1182,101 @@ message HelloResponse {
   dingodb.pb.common.StoreOwnMetrics store_own_metrics = 7;
 }
 
+// backup & restore
+message BackupDataRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  Context context = 2;
+  bytes start_key = 3;
+  bytes end_key = 4;
+
+  // need leader [required] if true, the backup request will be sent to leader of the region. default is true .
+  bool need_leader = 13;
+
+  // region type [required]
+  dingodb.pb.common.RegionType region_type = 14;
+
+  // backup ts [optional] like "2022-09-08 13:30:00 +08:00"
+  string backup_ts = 15;
+
+  // backup tso [required] like "1631158200000000000"
+  int64 backup_tso = 16;
+
+  // storage path [optional]
+  string storage_path = 17;
+
+  // The storage backend for backup. default is nfs file system [required]
+  dingodb.pb.common.StorageBackend storage_backend = 18;
+
+  // algorithm used for compress sst files  [optional]
+  // currently  not supported.
+  dingodb.pb.common.CompressionType compression_type = 19;
+
+  // sst compression level, some algorithms support negative compression levels [optional]
+  // currently  not supported.
+  int32 compression_level = 20;
+}
+
+message BackupDataResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+
+  dingodb.pb.error.Error error = 2;
+
+  dingodb.pb.common.BackupDataFileValueSstMetaGroup sst_metas = 3;
+}
+
+message BackupMetaRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  Context context = 2;
+  bytes start_key = 3;
+  bytes end_key = 4;
+
+  // need leader [required] if true, the backup request will be sent to leader of the region. default is true .
+  bool need_leader = 13;
+
+  // region type [required]
+  dingodb.pb.common.RegionType region_type = 14;
+
+  // backup ts [optional] like "2022-09-08 13:30:00 +08:00"
+  string backup_ts = 15;
+
+  // backup tso [required] like "1631158200000000000"
+  int64 backup_tso = 16;
+
+  // storage path [optional]
+  string storage_path = 17;
+
+  // The storage backend for backup. default is nfs file system [required]
+  dingodb.pb.common.StorageBackend storage_backend = 18;
+
+  // algorithm used for compress sst files  [optional]
+  // currently  not supported.
+  dingodb.pb.common.CompressionType compression_type = 19;
+
+  // sst compression level, some algorithms support negative compression levels [optional]
+  // currently  not supported.
+  int32 compression_level = 20;
+}
+
+message BackupMetaResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+
+  dingodb.pb.error.Error error = 2;
+
+  dingodb.pb.common.BackupDataFileValueSstMetaGroup sst_metas = 3;
+}
+
+message ControlConfigRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  Context context = 2;
+  repeated dingodb.pb.common.ControlConfigVariable control_config_variable = 3;
+}
+
+message ControlConfigResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+  repeated dingodb.pb.common.ControlConfigVariable control_config_variable = 3;
+}
+
 service StoreService {
   rpc Hello(HelloRequest) returns (HelloResponse);
   rpc GetMemoryInfo(HelloRequest) returns (HelloResponse);
@@ -1224,4 +1319,9 @@ service StoreService {
   rpc TxnGc(TxnGcRequest) returns (TxnGcResponse);
   rpc TxnDeleteRange(TxnDeleteRangeRequest) returns (TxnDeleteRangeResponse);
   rpc TxnCheckSecondaryLocks(TxnCheckSecondaryLocksRequest) returns (TxnCheckSecondaryLocksResponse);
+
+  // backup & restore
+  rpc BackupData(BackupDataRequest) returns (BackupDataResponse);
+  rpc BackupMeta(BackupMetaRequest) returns (BackupMetaResponse);
+  rpc ControlConfig(ControlConfigRequest) returns (ControlConfigResponse);
 };
