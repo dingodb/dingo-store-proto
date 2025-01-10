@@ -299,6 +299,15 @@ message MetaIncrementTaskList {
   MetaIncrementOpType op_type = 3;
   bool is_partial_update = 4;
   repeated MetaIncrementRegionCmdStatus region_cmds_status = 5;
+
+  message MoveRegionCmd {
+    int64 region_cmd_id = 1;
+    int64 from_store_id = 2;
+    int64 to_store_id = 3;
+  }
+  oneof Modify {
+    MoveRegionCmd move_region_cmd = 6;
+  }
 }
 
 // lease

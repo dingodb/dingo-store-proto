@@ -127,6 +127,11 @@ message Task {
   TaskPreCheck pre_check = 2;
   repeated StoreOperation store_operations = 3;
   repeated CoordinatorOperation coordinator_operations = 4;
+  int32 retry_count = 5;                       // default 5
+  repeated dingodb.pb.error.Error errors = 6;  // the error of this task, at most 5
+  bool parallelism = 7;
+  bool parallel_task_success = 8;  // parallel_task status
+  repeated Task parallel_tasks = 9;
 }
 
 message TaskList {
@@ -136,6 +141,8 @@ message TaskList {
   repeated Task tasks = 4;
   string create_time = 10;
   string finish_time = 11;
+  string update_time = 12;
+  string status = 13;
 }
 
 message CreateRequest {
@@ -264,6 +271,7 @@ message RegionCmd {
   bool is_notify = 40;                // store need to notify coordinator when this cmd is done
   RegionCmdStatus status = 50;        // the status of this cmd
   dingodb.pb.error.Error error = 51;  // the error of this cmd
+  bool retry = 52;                    // if retry = true, means task meet error and retry this region_cmd
 }
 
 // StoreOperation
