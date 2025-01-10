@@ -125,9 +125,8 @@ message CoordinatorOperation {
 
 message Task {
   int32 step = 1;
-  TaskPreCheck pre_check = 2;
-  repeated StoreOperation store_operations = 3;
-  repeated CoordinatorOperation coordinator_operations = 4;
+  repeated StoreOperation store_operations = 2;
+  repeated CoordinatorOperation coordinator_operations = 3;
 }
 
 message TaskList {
@@ -137,6 +136,8 @@ message TaskList {
   repeated Task tasks = 4;
   string create_time = 10;
   string finish_time = 11;
+  string update_time = 12;
+  string status = 13;
 }
 
 message CreateRequest {
@@ -265,12 +266,17 @@ message RegionCmd {
   bool is_notify = 40;                // store need to notify coordinator when this cmd is done
   RegionCmdStatus status = 50;        // the status of this cmd
   dingodb.pb.error.Error error = 51;  // the error of this cmd
+  bool retry = 52;                    // if retry = true, means task meet error and retry this region_cmd
 }
 
 // StoreOperation
 message StoreOperation {
   int64 id = 1;  // this is store id
   repeated RegionCmd region_cmds = 2;
+  TaskPreCheck pre_check = 3;
+  int32 retry_count = 4;                       // default 5
+  repeated dingodb.pb.error.Error errors = 5;  // the error of this task, default 5
+  bool is_success = 6;                         // operation_success status
 }
 
 // Store report self status and region (this node is leader) status
@@ -1306,7 +1312,7 @@ service CoordinatorService {
   // dingofs MDS
   rpc MDSHeartbeat(MDSHeartbeatRequest) returns (MDSHeartbeatResponse);
   rpc GetMDSList(GetMDSListRequest) returns (GetMDSListResponse);
-  
+
   // backup & restore
   rpc RegisterBackup(RegisterBackupRequest) returns (RegisterBackupResponse);
   rpc UnRegisterBackup(UnRegisterBackupRequest) returns (UnRegisterBackupResponse);

@@ -30,10 +30,12 @@ message RegionRequest {};
 message RegionResponse {};
 message StoreMetricsRequest {};
 message StoreMetricsResponse {};
-message TaskListRequest {};
-message TaskListResponse {};
+message JobListRequest {};
+message JobListResponse {};
 message StoreOperationRequest {};
 message StoreOperationResponse {};
+message ArchiveJobListRequest {};
+message ArchiveJobListResponse {};
 
 service dingo {
   rpc default_method(ClusterStatRequest) returns (ClusterStatResponse);
@@ -51,10 +53,14 @@ service store_metrics {
   rpc default_method(StoreMetricsRequest) returns (StoreMetricsResponse);
 }
 
-service task_list {
-  rpc default_method(TaskListRequest) returns (TaskListResponse);
+service job_list {
+  rpc default_method(JobListRequest) returns (JobListResponse);
 }
 
 service store_operation {
   rpc default_method(StoreOperationRequest) returns (StoreOperationResponse);
+}
+
+service archive_job_list {
+  rpc default_method(ArchiveJobListRequest) returns (ArchiveJobListResponse);
 }
