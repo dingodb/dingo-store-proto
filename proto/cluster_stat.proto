@@ -53,7 +53,7 @@ service store_metrics {
   rpc default_method(StoreMetricsRequest) returns (StoreMetricsResponse);
 }
 
-service job_list {
+service job {
   rpc default_method(JobListRequest) returns (JobListResponse);
 }
 
@@ -61,6 +61,6 @@ service store_operation {
   rpc default_method(StoreOperationRequest) returns (StoreOperationResponse);
 }
 
-service archive_job_list {
+service archive_job {
   rpc default_method(ArchiveJobListRequest) returns (ArchiveJobListResponse);
 }

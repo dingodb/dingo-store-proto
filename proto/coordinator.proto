@@ -48,7 +48,7 @@ enum IdEpochType {
   RAFT_APPLY_INDEX = 22;
 
   ID_NEXT_REGION_CMD = 31;
-  ID_NEXT_TASK_LIST = 32;
+  ID_NEXT_JOB = 32;
 
   ID_NEXT_LEASE = 40;
   ID_NEXT_REVISION = 41;
@@ -129,8 +129,9 @@ message Task {
   repeated CoordinatorOperation coordinator_operations = 3;
 }
 
-message TaskList {
-  int64 id = 1;  // this is the id of coordinator task list
+// Job->Task->StoreOperation->RegionCmd
+message Job {
+  int64 id = 1;  // this is the id of coordinator job list
   string name = 2;
   int64 next_step = 3;  // the next index of tasks to execute
   repeated Task tasks = 4;
@@ -271,7 +272,7 @@ message RegionCmd {
 
 // StoreOperation
 message StoreOperation {
-  int64 id = 1;  // this is store id
+  int64 store_id = 1;
   repeated RegionCmd region_cmds = 2;
   TaskPreCheck pre_check = 3;
   int32 retry_count = 4;                       // default 5
@@ -373,8 +374,8 @@ message CoordinatorMemoryInfo {
   int64 region_cmd_map_count = 63;
   int64 region_cmd_map_size = 64;
 
-  int64 task_list_map_count = 65;
-  int64 task_list_map_size = 66;
+  int64 job_map_count = 65;
+  int64 job_map_size = 66;
 
   // deleted
   int64 deleted_region_map_count = 71;
@@ -802,35 +803,35 @@ message GetRegionCmdResponse {
   repeated dingodb.pb.error.Error region_cmd_errors = 4;
 }
 
-message GetTaskListRequest {
+message GetJobListRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   int64 cluster_id = 2;
-  int64 task_list_id = 3;
-  bool get_task_list_id_only = 4;
+  int64 job_id = 3;
+  bool get_job_id_only = 4;
   bool include_archive = 5;
-  int64 archive_start_id = 6;  // task_list range [archive_start_id, ~)
-  int32 archive_limit = 7;     // return task_list num
+  int64 archive_start_id = 6;  // job range [archive_start_id, ~)
+  int32 archive_limit = 7;     // return job num
 }
 
-message GetTaskListResponse {
+message GetJobListResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
-  repeated TaskList task_lists = 3;
+  repeated Job job_list = 3;
 }
 
-message CleanTaskListRequest {
+message CleanJobListRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
-  int64 task_list_id = 2;
+  int64 job_id = 2;
 }
 
-message CleanTaskListResponse {
+message CleanJobListResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
 }
 
 message UpdateRegionCmdStatusRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
-  int64 task_list_id = 2;            // the task_list_id of the region_cmd to update
+  int64 job_id = 2;                  // the job_id of the region_cmd to update
   int64 region_cmd_id = 3;           // the region_cmd_id to update
   RegionCmdStatus status = 4;        // If status is STATUS_FAIL, error is required
   dingodb.pb.error.Error error = 5;  // The error of this region cmd
@@ -1289,9 +1290,9 @@ service CoordinatorService {
   rpc RemoveStoreOperation(RemoveStoreOperationRequest) returns (RemoveStoreOperationResponse);
   rpc GetRegionCmd(GetRegionCmdRequest) returns (GetRegionCmdResponse);
 
-  // TaskList
-  rpc GetTaskList(GetTaskListRequest) returns (GetTaskListResponse);
-  rpc CleanTaskList(CleanTaskListRequest) returns (CleanTaskListResponse);
+  // JobList
+  rpc GetJobList(GetJobListRequest) returns (GetJobListResponse);
+  rpc CleanJobList(CleanJobListRequest) returns (CleanJobListResponse);
   rpc UpdateRegionCmdStatus(UpdateRegionCmdStatusRequest) returns (UpdateRegionCmdStatusResponse);
 
   // RaftControl
