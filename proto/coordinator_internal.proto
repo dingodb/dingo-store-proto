@@ -294,12 +294,21 @@ message MetaIncrementRegionCmdStatus {
   dingodb.pb.error.Error error = 3;
 }
 
-message MetaIncrementTaskList {
-  int64 id = 1;  // this is task list id
-  dingodb.pb.coordinator.TaskList task_list = 2;
+message MetaIncrementJobList {
+  int64 id = 1;  // this is job list id
+  dingodb.pb.coordinator.JobList job_list = 2;
   MetaIncrementOpType op_type = 3;
   bool is_partial_update = 4;
   repeated MetaIncrementRegionCmdStatus region_cmds_status = 5;
+
+  message MoveRegionCmd {
+    int64 region_cmd_id = 1;
+    int64 from_store_id = 2;
+    int64 to_store_id = 3;
+  }
+  oneof Modify {
+    MoveRegionCmd move_region_cmd = 6;
+  }
 }
 
 // lease
@@ -417,7 +426,7 @@ message MetaIncrement {
   repeated MetaIncrementStoreOperation store_operations = 10;
   repeated MetaIncrementRegionCmd region_cmds = 11;
   repeated MetaIncrementExecutorUser executor_users = 12;
-  repeated MetaIncrementTaskList task_lists = 13;
+  repeated MetaIncrementJobList job_lists = 13;
   repeated MetaIncrementTable indexes = 14;
   repeated MetaIncrementIndexMetrics index_metrics = 15;
 
@@ -459,7 +468,7 @@ message MetaSnapshotFile {
   repeated dingodb.pb.common.KeyValue store_operation_map_kvs = 10;
   repeated dingodb.pb.common.KeyValue region_cmd_map_kvs = 11;
   repeated dingodb.pb.common.KeyValue executor_user_map_kvs = 12;
-  repeated dingodb.pb.common.KeyValue task_list_map_kvs = 13;
+  repeated dingodb.pb.common.KeyValue job_list_map_kvs = 13;
   repeated dingodb.pb.common.KeyValue index_map_kvs = 14;
   repeated dingodb.pb.common.KeyValue index_metrics_map_kvs = 15;
 
