@@ -466,4 +466,5 @@ service IndexService {
   // backup & restore
   rpc BackupData(dingodb.pb.store.BackupDataRequest) returns (dingodb.pb.store.BackupDataResponse);
   rpc ControlConfig(dingodb.pb.store.ControlConfigRequest) returns (dingodb.pb.store.ControlConfigResponse);
+  rpc RestoreData(dingodb.pb.store.RestoreDataRequest) returns (dingodb.pb.store.RestoreDataResponse);
 };

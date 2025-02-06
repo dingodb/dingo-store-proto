@@ -1233,6 +1233,62 @@ message ControlConfigResponse {
   repeated dingodb.pb.common.ControlConfigVariable control_config_variable = 3;
 }
 
+message RegisterBackupStatusRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+}
+
+message RegisterBackupStatusResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+
+  // is backing up. is true, means backup is in progress. backup_name will be ignore.
+  // is false means backup is not in progress.
+  bool is_backing_up = 3;
+
+  // backup name. usually uuid.
+  string backup_name = 4;
+}
+
+message RegisterRestoreRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  string restore_name = 2;              // uuid
+  string restore_path = 3;              // restore path
+  int64 restore_start_timestamp = 4;    // restore start timestamp
+  int64 restore_current_timestamp = 5;  // restore current timestamp
+  int64 restore_timeout_s = 6;          // restore timeout in seconds
+}
+
+message RegisterRestoreResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+}
+
+message UnRegisterRestoreRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  string restore_name = 2;  // uuid
+}
+
+message UnRegisterRestoreResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+}
+
+message RegisterRestoreStatusRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+}
+
+message RegisterRestoreStatusResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+
+  // is restoring . is true, means restore is in progress. restore_name will be ignore.
+  // is false means restore is not in progress.
+  bool is_restoring = 3;
+
+  // restore name. usually uuid.
+  string restore_name = 4;
+}
+
 service CoordinatorService {
   // Hello, this is for coordinator and meta
   rpc Hello(HelloRequest) returns (HelloResponse);
@@ -1318,4 +1374,9 @@ service CoordinatorService {
   rpc RegisterBackup(RegisterBackupRequest) returns (RegisterBackupResponse);
   rpc UnRegisterBackup(UnRegisterBackupRequest) returns (UnRegisterBackupResponse);
   rpc ControlConfig(ControlConfigRequest) returns (ControlConfigResponse);
+
+  rpc RegisterBackupStatus(RegisterBackupStatusRequest) returns (RegisterBackupStatusResponse);
+  rpc RegisterRestore(RegisterRestoreRequest) returns (RegisterRestoreResponse);
+  rpc UnRegisterRestore(UnRegisterRestoreRequest) returns (UnRegisterRestoreResponse);
+  rpc RegisterRestoreStatus(RegisterRestoreStatusRequest) returns (RegisterRestoreStatusResponse);
 }

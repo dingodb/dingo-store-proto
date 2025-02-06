@@ -257,7 +257,7 @@ message Coprocessor {
   // The list that needs to be aggregated is allowed to be empty, that is, not aggregated sum(salary), count(age),
   // count(salary). but group_by_columns is not allowed to be empty
   repeated AggregationOperator aggregation_operators = 7;
- 
+
   int32 codec_version = 8;
 }
 
@@ -1277,6 +1277,82 @@ message ControlConfigResponse {
   repeated dingodb.pb.common.ControlConfigVariable control_config_variable = 3;
 }
 
+message RestoreDataRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  Context context = 2;
+
+  // region start key
+  bytes start_key = 3;
+
+  // region end key
+  bytes end_key = 4;
+
+  // need leader [required] if true, the backup request will be sent to leader of the region. default is true .
+  bool need_leader = 13;
+
+  // region type [required]
+  dingodb.pb.common.RegionType region_type = 14;
+
+  // restore ts [optional] like "2022-09-08 13:30:00 +08:00"
+  string backup_ts = 15;
+
+  // restore tso [optional] like "1631158200000000000"
+  int64 backup_tso = 16;
+
+  // storage path [optional]
+  string storage_path = 17;
+
+  // The storage backend for backup. default is nfs file system [required]
+  dingodb.pb.common.StorageBackend storage_backend = 18;
+
+  // restore files meta [required]
+  dingodb.pb.common.BackupDataFileValueSstMetaGroup sst_metas = 19;
+}
+
+message RestoreDataResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+
+  dingodb.pb.error.Error error = 2;
+}
+
+message RestoreMetaRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  Context context = 2;
+
+  // region start key
+  bytes start_key = 3;
+
+  // region end key
+  bytes end_key = 4;
+
+  // need leader [required] if true, the backup request will be sent to leader of the region. default is true .
+  bool need_leader = 13;
+
+  // region type [required]
+  dingodb.pb.common.RegionType region_type = 14;
+
+  // restore ts [optional] like "2022-09-08 13:30:00 +08:00"
+  string backup_ts = 15;
+
+  // restore tso [optional] like "1631158200000000000"
+  int64 backup_tso = 16;
+
+  // storage path [optional]
+  string storage_path = 17;
+
+  // The storage backend for backup. default is nfs file system [required]
+  dingodb.pb.common.StorageBackend storage_backend = 18;
+
+  // restore files meta [required]
+  dingodb.pb.common.BackupDataFileValueSstMetaGroup sst_metas = 19;
+}
+
+message RestoreMetaResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+
+  dingodb.pb.error.Error error = 2;
+}
+
 service StoreService {
   rpc Hello(HelloRequest) returns (HelloResponse);
   rpc GetMemoryInfo(HelloRequest) returns (HelloResponse);
@@ -1324,4 +1400,6 @@ service StoreService {
   rpc BackupData(BackupDataRequest) returns (BackupDataResponse);
   rpc BackupMeta(BackupMetaRequest) returns (BackupMetaResponse);
   rpc ControlConfig(ControlConfigRequest) returns (ControlConfigResponse);
+  rpc RestoreData(RestoreDataRequest) returns (RestoreDataResponse);
+  rpc RestoreMeta(RestoreMetaRequest) returns (RestoreMetaResponse);
 };
