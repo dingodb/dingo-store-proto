@@ -254,4 +254,5 @@ service DocumentService {
   rpc TxnDeleteRange(dingodb.pb.store.TxnDeleteRangeRequest) returns (dingodb.pb.store.TxnDeleteRangeResponse);
   // backup & restore
   rpc BackupData(dingodb.pb.store.BackupDataRequest) returns (dingodb.pb.store.BackupDataResponse);
+  rpc RestoreData(dingodb.pb.store.RestoreDataRequest) returns (dingodb.pb.store.RestoreDataResponse);
 };

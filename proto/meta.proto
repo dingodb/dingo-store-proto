@@ -1194,6 +1194,26 @@ message SaveIdEpochTypeResponse {
   IdEpochTypeAndValue id_epoch_type_and_value = 3;
 }
 
+message ImportMetaRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  MetaALL meta_all = 2;
+}
+
+message ImportMetaResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+}
+
+message ImportIdEpochTypeRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  IdEpochTypeAndValue id_epoch_type_and_value = 2;
+}
+
+message ImportIdEpochTypeResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+}
+
 service MetaService {
   // Hello, this is for auto_increment
   rpc Hello(HelloRequest) returns (HelloResponse);
@@ -1432,4 +1452,8 @@ service MetaService {
   rpc ExportMeta(ExportMetaRequest) returns (ExportMetaResponse);
 
   rpc SaveIdEpochType(SaveIdEpochTypeRequest) returns (SaveIdEpochTypeResponse);
+
+  rpc ImportMeta(ImportMetaRequest) returns (ImportMetaResponse);
+
+  rpc ImportIdEpochType(ImportIdEpochTypeRequest) returns (ImportIdEpochTypeResponse);
 }
