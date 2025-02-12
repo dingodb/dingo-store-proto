@@ -1184,6 +1184,8 @@ message MDSHeartbeatRequest {
 message MDSHeartbeatResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
+
+  repeated dingodb.pb.common.MDS mdses = 10;
 }
 
 message GetMDSListRequest {
