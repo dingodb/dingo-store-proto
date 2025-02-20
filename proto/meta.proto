@@ -575,6 +575,8 @@ message CreateSchemaRequest {
   DingoCommonId parent_schema_id = 2;
   string schema_name = 3;
   int64 tenant_id = 4;
+  // default is 0 , br restore designated schema
+  int64 schema_id = 5;
 }
 
 message CreateSchemaResponse {
