@@ -1184,8 +1184,6 @@ message MDSHeartbeatRequest {
 message MDSHeartbeatResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
-
-  repeated dingodb.pb.common.MDS mdses = 10;
 }
 
 message GetMDSListRequest {
@@ -1243,8 +1241,8 @@ message RegisterBackupStatusResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
 
-  // is backing up. is true, means backup is in progress. backup_name will be ignore.
-  // is false means backup is not in progress.
+  // is backing up. is true, means backup is in progress. 
+  // is false means backup is not in progress . backup_name will be ignore.
   bool is_backing_up = 3;
 
   // backup name. usually uuid.
@@ -1283,8 +1281,8 @@ message RegisterRestoreStatusResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
 
-  // is restoring . is true, means restore is in progress. restore_name will be ignore.
-  // is false means restore is not in progress.
+  // is restoring . is true, means restore is in progress. 
+  // is false means restore is not in progress . restore_name will be ignore.
   bool is_restoring = 3;
 
   // restore name. usually uuid.
