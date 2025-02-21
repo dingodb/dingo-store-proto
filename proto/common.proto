@@ -696,6 +696,8 @@ message CoprocessorV2 {
   bytes rel_expr = 5;
 
   int32 codec_version = 6;
+
+  bool for_agg_count = 7;
 }
 
 message VectorSearchParameter {
