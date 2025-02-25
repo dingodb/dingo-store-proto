@@ -863,6 +863,13 @@ message CreateRegionRequest {
   // optional if set, will create a store engine with this type, this is type is default raft store engine
   dingodb.pb.common.StorageEngine store_engine = 7;
 
+  // optional, if region_id <= 0.  coordinator will generate new region_id.  if region_id > 0   coordinator will use
+  // the region_id.
+  int64 region_id = 8;
+
+  // if true, use region_name direct; if false, use region_name add [region_id]
+  bool use_region_name_direct = 9;
+
   int64 schema_id = 11;  // optional
   int64 table_id = 12;   // optional
   int64 index_id = 13;   // optional, if region_type is INDEX, this field is required
@@ -1241,7 +1248,7 @@ message RegisterBackupStatusResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
 
-  // is backing up. is true, means backup is in progress. 
+  // is backing up. is true, means backup is in progress.
   // is false means backup is not in progress . backup_name will be ignore.
   bool is_backing_up = 3;
 
@@ -1281,7 +1288,7 @@ message RegisterRestoreStatusResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
 
-  // is restoring . is true, means restore is in progress. 
+  // is restoring . is true, means restore is in progress.
   // is false means restore is not in progress . restore_name will be ignore.
   bool is_restoring = 3;
 
