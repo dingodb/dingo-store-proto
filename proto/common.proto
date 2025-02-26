@@ -110,6 +110,11 @@ message VectorWithDistance {
   MetricType metric_type = 3;
 }
 
+message VectorWithKey {
+  VectorWithId vector_with_id = 1;
+  bytes key = 2;  // for server inner use
+}
+
 enum CoordinatorState {
   COORDINATOR_NEW = 0;
   COORDINATOR_NORMAL = 1;

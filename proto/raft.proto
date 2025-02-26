@@ -43,10 +43,12 @@ enum CmdType {
   VECTOR_ADD = 3000;
   VECTOR_DELETE = 3001;
   REBUILD_VECTOR_INDEX = 3010;
+  VECTOR_BATCH_ADD = 3011;
 
   // document [5000,6000]
   DOCUMENT_ADD = 5000;
   DOCUMENT_DELETE = 5001;
+  DOCUMENT_BATCH_ADD = 5002;
 
   // txn
   TXN = 4000;
@@ -180,6 +182,17 @@ message VectorDeleteRequest {
 
 message VectorDeleteResponse {}
 
+message VectorBatchAddRequest {
+  repeated dingodb.pb.common.VectorWithId vectors = 1;
+  repeated dingodb.pb.common.KeyValue kvs_default = 2;
+  repeated dingodb.pb.common.KeyValue kvs_scalar = 3;
+  repeated dingodb.pb.common.KeyValue kvs_table = 4;
+  repeated dingodb.pb.common.KeyValue kvs_scalar_speed_up = 5;
+  bool is_update = 6;
+}
+
+message VectorBatchAddResponse {}
+
 message RebuildVectorIndexRequest {
   int64 cmd_id = 1;  // the merge request unique id
 }
@@ -201,6 +214,15 @@ message DocumentDeleteRequest {
 }
 
 message DocumentDeleteResponse {}
+
+message DocumentBatchAddRequest {
+  string cf_name = 1;
+  repeated dingodb.pb.common.DocumentWithId documents = 2;
+  bool is_update = 3;
+  repeated dingodb.pb.common.KeyValue kvs = 4;
+}
+
+message DocumentBatchAddResponse {}
 
 // txn
 message PutsWithCf {
@@ -280,10 +302,12 @@ message Request {
     VectorAddRequest vector_add = 3000;
     VectorDeleteRequest vector_delete = 3001;
     RebuildVectorIndexRequest rebuild_vector_index = 3010;
+    VectorBatchAddRequest vector_batch_add = 3011;
 
     // document [5000,6000]
     DocumentAddRequest document_add = 5000;
     DocumentDeleteRequest document_delete = 5001;
+    DocumentBatchAddRequest document_batch_add = 5002;  // for restore data
 
     // txn
     TxnRaftRequest txn_raft_req = 4000;
@@ -313,10 +337,12 @@ message Response {
     VectorAddResponse vector_add = 3000;
     VectorDeleteResponse vector_delete = 3001;
     RebuildVectorIndexResponse rebuild_vector_index = 3010;
+    VectorBatchAddResponse vector_batch_add = 3011;
 
     // document [5000,5000]
     DocumentAddResponse document_add = 5000;
     DocumentDeleteResponse document_delete = 5001;
+    DocumentBatchAddResponse document_batch_add = 5002;  // for restore data
 
     // txn
     TxnRaftResponse txn_raft_resp = 4000;

@@ -467,4 +467,5 @@ service IndexService {
   rpc BackupData(dingodb.pb.store.BackupDataRequest) returns (dingodb.pb.store.BackupDataResponse);
   rpc ControlConfig(dingodb.pb.store.ControlConfigRequest) returns (dingodb.pb.store.ControlConfigResponse);
   rpc RestoreData(dingodb.pb.store.RestoreDataRequest) returns (dingodb.pb.store.RestoreDataResponse);
+  rpc RestoreMeta(dingodb.pb.store.RestoreMetaRequest) returns (dingodb.pb.store.RestoreMetaResponse);
 };
