@@ -1216,6 +1216,16 @@ message ImportIdEpochTypeResponse {
   dingodb.pb.error.Error error = 2;
 }
 
+message CreateOrUpdateAutoIncrementsRequest{
+  dingodb.pb.common.RequestInfo request_info = 1;
+  TableIncrementGroup table_increment_group = 2;
+}
+
+message CreateOrUpdateAutoIncrementsResponse{
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+}
+
 service MetaService {
   // Hello, this is for auto_increment
   rpc Hello(HelloRequest) returns (HelloResponse);
@@ -1458,4 +1468,7 @@ service MetaService {
   rpc ImportMeta(ImportMetaRequest) returns (ImportMetaResponse);
 
   rpc ImportIdEpochType(ImportIdEpochTypeRequest) returns (ImportIdEpochTypeResponse);
+
+  // restore  if not exist, create, if exist, update
+  rpc CreateOrUpdateAutoIncrements(CreateOrUpdateAutoIncrementsRequest) returns (CreateOrUpdateAutoIncrementsResponse);
 }
