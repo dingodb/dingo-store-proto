@@ -112,7 +112,8 @@ message VectorWithDistance {
 
 message VectorWithKey {
   VectorWithId vector_with_id = 1;
-  bytes key = 2;  // for server inner use
+  bytes key = 2;       // for server inner use
+  bool is_delete = 3;  // for server inner use
 }
 
 enum CoordinatorState {
