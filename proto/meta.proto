@@ -1216,12 +1216,43 @@ message ImportIdEpochTypeResponse {
   dingodb.pb.error.Error error = 2;
 }
 
-message CreateOrUpdateAutoIncrementsRequest{
+message CreateOrUpdateAutoIncrementsRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   TableIncrementGroup table_increment_group = 2;
 }
 
-message CreateOrUpdateAutoIncrementsResponse{
+message CreateOrUpdateAutoIncrementsResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+}
+
+message CreateTenantsRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  repeated Tenant tenants = 2;
+}
+message CreateTenantsResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+}
+
+message CreateSchemasRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  // key: tenant_id
+  map<int64, Schemas> schemas = 2;
+}
+
+message CreateSchemasResponse {
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+}
+
+message CreateIndexMetasRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  // key: Schema DingoCommonId = (EntityType|int64|int64)
+  map<string, TablesAndIndexes> tables_and_indexes = 2;
+}
+
+message CreateIndexMetasResponse {
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
 }
@@ -1471,4 +1502,8 @@ service MetaService {
 
   // restore  if not exist, create, if exist, update
   rpc CreateOrUpdateAutoIncrements(CreateOrUpdateAutoIncrementsRequest) returns (CreateOrUpdateAutoIncrementsResponse);
+
+  rpc CreateTenants(CreateTenantsRequest) returns (CreateTenantsResponse);
+  rpc CreateSchemas(CreateSchemasRequest) returns (CreateSchemasResponse);
+  rpc CreateIndexMetas(CreateIndexMetasRequest) returns (CreateIndexMetasResponse);
 }
