@@ -1109,6 +1109,9 @@ message VersionInfo {
   bool use_tcmalloc = 90;
   bool use_profiler = 100;
   bool use_sanitizer = 110;
+  bool use_diskann = 120;
+  bool diskann_depend_on_system = 130;  // if true, diskann depend on system, else use third_party.
+  string boost_summary = 140;
 }
 
 message DocumentValue {
