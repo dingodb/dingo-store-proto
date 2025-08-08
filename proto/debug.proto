@@ -529,6 +529,23 @@ message DumpRegionResponse {
   int64 table_id = 4;
 }
 
+message DumpMemoryLockRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+  int64 region_id = 2;
+}
+
+message DumpMemoryLockResponse {
+  message Lock {
+    bytes key = 1;
+    dingodb.pb.store.LockInfo lock_info = 2;
+  }
+
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  dingodb.pb.error.Error error = 2;
+
+  repeated Lock locks = 3;
+}
+
 service DebugService {
   // region
   rpc AddRegion(AddRegionRequest) returns (AddRegionResponse);
@@ -568,4 +585,7 @@ service DebugService {
 
   // dump region all version data
   rpc DumpRegion(DumpRegionRequest) returns (DumpRegionResponse);
+
+  // dump region all memory lock
+  rpc DumpRegionMemoryLock(DumpMemoryLockRequest) returns (DumpMemoryLockResponse);
 }
