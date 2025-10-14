@@ -395,7 +395,7 @@ enum ScalarFieldType {
   STRING = 8;   // for vector is string, for document is text with tokenizer
   BYTES = 9;  // for document only, is binary data, no tokenizer is used, not implemented now, will be used in the near
   DATETIME = 10;  // for document only, datetime values must be provided in rfc3339 format, such as 1970-01-01T00:00:00Z
-                  // future
+  DECIMAL = 11; // for decimal.
 }
 
 message ScalarField {
@@ -666,6 +666,9 @@ message Schema {
     LONGLIST = 9;
     DOUBLELIST = 10;
     STRINGLIST = 11;
+
+    DECIMAL = 12;
+    DECIMALLIST = 13;
   };
 
   // type of data
@@ -682,6 +685,12 @@ message Schema {
 
   // field name only for scala , others invalid
   string name = 5;
+
+  //precision.
+  int64 precision = 6;
+
+  //scale.
+  int64 scale = 7;
 }
 
 message CoprocessorV2 {
