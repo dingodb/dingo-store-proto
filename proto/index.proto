@@ -389,6 +389,24 @@ message VectorDumpResponse {
   repeated string dump_datas = 3;
 }
 
+message VectorDisplayDocumentDetailsRequest {
+  dingodb.pb.common.RequestInfo request_info = 1;
+
+  dingodb.pb.store.Context context = 2;
+}
+
+message VectorDisplayDocumentDetailsResponse {
+  // response info
+  dingodb.pb.common.ResponseInfo response_info = 1;
+  // error code
+  dingodb.pb.error.Error error = 2;
+
+  dingodb.pb.common.DocumentIndexMetrics document_index_metrics = 3;
+  dingodb.pb.common.DocumentIndexStatus document_index_status = 4;
+  dingodb.pb.common.VectorIndexParameter vector_index_parameter = 5;
+  dingodb.pb.common.DocumentIndexExtendedStatus document_index_extended_status = 6;
+}
+
 message VectorGetParameter {
   // the parameter below is inherited from VectorBatchQueryRequest
   bool without_vector_data = 1;       // Default false, if true, response without vector data.
@@ -438,6 +456,7 @@ service IndexService {
   rpc VectorStatus(VectorStatusRequest) returns (VectorStatusResponse);
   rpc VectorReset(VectorResetRequest) returns (VectorResetResponse);
   rpc VectorDump(VectorDumpRequest) returns (VectorDumpResponse);
+  rpc VectorDisplayDocumentDetails(VectorDisplayDocumentDetailsRequest) returns (VectorDisplayDocumentDetailsResponse);
 
   // debug
   // test  vector search performance
