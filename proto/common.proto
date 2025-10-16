@@ -572,6 +572,12 @@ message VectorIndexParameter {
     CreateBinaryIvfFlatParam binary_ivf_flat_parameter = 16;
   }
   ScalarSchema scalar_schema = 50;
+
+  // default false, if true, vector index will scalar pre-filtering with document index
+  bool enable_scalar_speed_up_with_document = 80;
+
+  // if enable_scalar_speed_up_with_document is true, this parameter will be used
+  DocumentIndexParameter document_index_parameter = 81;
 }
 
 message SearchFlatParam {
@@ -749,6 +755,13 @@ message VectorSearchParameter {
 
   // use brute-force search
   bool use_brute_force = 25;
+
+  // use document index to speed up scalar filtering
+  // default false, if true, vector index will scalar pre-filtering with document index filter
+  bool is_scalar_speed_up_with_document = 50;
+
+  // The query_string for search
+  string query_string = 51;
 }
 
 message BuildFlatParam {}
@@ -1024,6 +1037,42 @@ message DocumentIndexStatus {
   int64 apply_log_id = 8;
   int64 snapshot_log_id = 9;
   int64 last_build_epoch_version = 10;
+}
+
+message DocumentIndexExtendedStatusItem {
+  string name = 1;
+  bool is_valid = 2;
+  int64 doc_count = 3;
+  int64 token_count = 4;
+  string meta_json = 5;
+  string json_parameter = 6;
+  int64 id = 7;
+  DocumentIndexParameter document_index_parameter = 8;
+  int64 apply_log_id = 9;
+  RegionEpoch epoch = 10;
+  Range range_raw = 11;
+  Range range_encode = 12;
+  string range_string = 13;
+  bool is_destroyed = 14;
+  bool is_defer_destroyed = 15;
+  string index_path = 16;
+}
+
+message DocumentIndexExtendedStatus {
+  int64 id = 1;
+  int64 version = 2;
+  DocumentIndexParameter document_index_parameter = 3;
+  int32 pending_task_num = 4;
+  int32 load_or_building_num = 5;
+  int32 rebuilding_num = 6;
+  int64 doc_count = 7;
+  int64 token_count = 8;
+  string meta_json = 9;
+  string json_parameter = 10;
+  string purpose_type = 11;
+  DocumentIndexExtendedStatusItem self = 12;
+  DocumentIndexExtendedStatusItem share = 13;
+  DocumentIndexExtendedStatusItem sibling = 14;
 }
 
 message StoreOwnMetrics {
