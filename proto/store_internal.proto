@@ -69,10 +69,6 @@ message Region {
 
   // Last split/merge/change_peer job id
   int64 last_change_job_id = 76;
-
-  // store local control, after the region leader switches,
-  // it needs to wait for the raft log synchronization application to complete before providing services
-  bool consistent_readable = 77;
 }
 
 message VectorIndexMeta {
