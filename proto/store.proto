@@ -1356,25 +1356,6 @@ message RestoreMetaResponse {
   dingodb.pb.error.Error error = 2;
 }
 
-message TxnCountRequest {
-  dingodb.pb.common.RequestInfo request_info = 1;
-  Context context = 2;
-  // prefix start_key end_key with mode
-  dingodb.pb.common.RangeWithOptions range = 3;
-
-   // the start_ts of the get transaction, store will return the value of the key when commit_ts < start_ts
-  int64 start_ts = 4;
-}
-
-message TxnCountResponse {
-  // response info
-  dingodb.pb.common.ResponseInfo response_info = 1;
-  // error code
-  dingodb.pb.error.Error error = 2;
-
-  int64 count = 3;
-}
-
 service StoreService {
   rpc Hello(HelloRequest) returns (HelloResponse);
   rpc GetMemoryInfo(HelloRequest) returns (HelloResponse);
@@ -1404,7 +1385,6 @@ service StoreService {
   rpc TxnBatchGet(TxnBatchGetRequest) returns (TxnBatchGetResponse);
   rpc TxnScan(TxnScanRequest) returns (TxnScanResponse);
   rpc TxnDump(TxnDumpRequest) returns (TxnDumpResponse);
-  rpc TxnCount(TxnCountRequest) returns (TxnCountResponse);
 
   rpc TxnPessimisticLock(TxnPessimisticLockRequest) returns (TxnPessimisticLockResponse);
   rpc TxnPessimisticRollback(TxnPessimisticRollbackRequest) returns (TxnPessimisticRollbackResponse);
