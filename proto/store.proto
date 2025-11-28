@@ -564,6 +564,13 @@ message TxnResultInfo {
   CommitTsExpired commit_ts_expired = 5;
 }
 
+message TxnInfo {
+  int64 start_ts = 1;
+  // `commit_ts == 0` means the transaction was rolled back.
+  // `commit_ts > 0` means the transaction was committed at the given timestamp oracle.
+  int64 commit_ts = 2;
+}
+
 // TxnGet do point-lookup a value for key in the transaction with start_ts
 message TxnGetRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
@@ -936,6 +943,7 @@ message TxnResolveLockRequest {
   int64 commit_ts = 4;
   // Only resolve specified keys.
   repeated bytes keys = 5;
+  repeated TxnInfo txn_infos = 6;
 }
 
 message TxnResolveLockResponse {
