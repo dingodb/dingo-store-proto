@@ -1136,6 +1136,12 @@ message RequestInfo {
 }
 
 message TimeInfo {
+  message ElapsedTime {
+    string name = 1;
+    uint64 time_ms = 2;
+    int64 skip_version = 3;
+  }
+
   int64 total_rpc_time_ns = 1;
 
   int64 service_queue_wait_time_ns = 2;
@@ -1146,6 +1152,8 @@ message TimeInfo {
   int64 store_write_time_ns = 7;
   int64 vector_index_write_time_ns = 8;
   int64 document_index_write_time_ns = 9;
+
+  repeated ElapsedTime elapsed_times = 10;
 }
 
 message ResponseInfo {
