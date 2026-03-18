@@ -1138,7 +1138,7 @@ message RequestInfo {
 message TimeInfo {
   message ElapsedTime {
     string name = 1;
-    uint64 time_ms = 2;
+    uint64 time_us = 2;
     int64 skip_version = 3;
   }
 
