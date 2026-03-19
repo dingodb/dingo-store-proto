@@ -255,4 +255,7 @@ service DocumentService {
   // backup & restore
   rpc BackupData(dingodb.pb.store.BackupDataRequest) returns (dingodb.pb.store.BackupDataResponse);
   rpc RestoreData(dingodb.pb.store.RestoreDataRequest) returns (dingodb.pb.store.RestoreDataResponse);
+
+  // not for backup & restore, only for sync disk
+  rpc ControlConfig(dingodb.pb.store.ControlConfigRequest) returns (dingodb.pb.store.ControlConfigResponse);
 };
