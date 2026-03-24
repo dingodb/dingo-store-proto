@@ -1140,6 +1140,10 @@ message TimeInfo {
     string name = 1;
     uint64 time_us = 2;
     int64 skip_version = 3;
+    // Number of times the block cache was hit,avoiding disk I/O.
+    uint64 block_cache_hit_count = 4;
+    // Number of times blocks were read from SST files (block cache misses).
+    uint64 block_read_count = 5;
   }
 
   int64 total_rpc_time_ns = 1;
