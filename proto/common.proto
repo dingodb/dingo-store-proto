@@ -1135,15 +1135,35 @@ message RequestInfo {
   int64 request_id = 1;
 }
 
+message RocksDBPerfContext {
+  // Number of times the block cache was hit (avoided a disk read).
+  uint64 block_cache_hit_count = 1;
+  // Number of data blocks read from disk (block cache misses).
+  uint64 block_read_count = 2;
+  // Total time spent reading data blocks from disk, in nanoseconds.
+  uint64 block_read_time_ns = 3;
+  // Total time spent decompressing data blocks after reading from disk, in nanoseconds.
+  uint64 block_decompress_time_ns = 4;
+  // Number of internal keys skipped during iteration (e.g., older versions of the same user key in MVCC).
+  uint64 internal_key_skipped_count = 5;
+  // Number of delete markers (tombstones) skipped during iteration.
+  uint64 internal_delete_skipped_count = 6;
+  // Number of user key comparisons performed (indicates comparison overhead in memtable/SST lookups).
+  uint64 user_key_comparison_count = 7;
+  // Total bytes read from disk for data blocks.
+  uint64 block_read_byte = 8;
+  // Time spent on internal seek operations within RocksDB iterators, in nanoseconds.
+  uint64 seek_internal_seek_time_ns = 9;
+  // Time spent finding the next user-visible entry (skipping internal keys/tombstones), in nanoseconds.
+  uint64 find_next_user_entry_time_ns = 10;
+}
+
 message TimeInfo {
   message ElapsedTime {
     string name = 1;
     uint64 time_us = 2;
     int64 skip_version = 3;
-    // Number of times the block cache was hit,avoiding disk I/O.
-    uint64 block_cache_hit_count = 4;
-    // Number of times blocks were read from SST files (block cache misses).
-    uint64 block_read_count = 5;
+    RocksDBPerfContext rocksdb_perf = 4;
   }
 
   int64 total_rpc_time_ns = 1;
