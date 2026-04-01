@@ -1158,12 +1158,23 @@ message RocksDBPerfContext {
   uint64 find_next_user_entry_time_ns = 10;
 }
 
+// Condensed RocksDB perf summary returned to callers via RPC response.
+// Aggregates raw RocksDBPerfContext metrics into actionable categories.
+message RocksDBPerfSummary {
+  // Total I/O time: block_read_time + block_decompress_time + seek_internal_seek_time + find_next_user_entry_time (ns)
+  uint64 io_time_ns = 1;
+  // Block cache hit count
+  uint64 cache_hit_count = 2;
+  // Total internal keys skipped (MVCC versions + tombstones)
+  uint64 internal_skipped_count = 3;
+}
+
 message TimeInfo {
   message ElapsedTime {
     string name = 1;
     uint64 time_us = 2;
     int64 skip_version = 3;
-    RocksDBPerfContext rocksdb_perf = 4;
+    RocksDBPerfSummary rocksdb_perf_summary = 4;
   }
 
   int64 total_rpc_time_ns = 1;
