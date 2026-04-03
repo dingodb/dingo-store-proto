@@ -172,6 +172,7 @@ enum DebugType {
   DOCUMENT_INDEX_METRICS = 101;
   TS_PROVIDER_METRICS = 110;
   RAFT_LOG_META = 111;
+  GC_METRICS = 112;
 }
 
 message DebugRequest {
@@ -311,6 +312,37 @@ message DebugResponse {
     repeated TruncatePrefix truncate_prefies = 10;
   }
 
+  message TxnGcHistoryItem {
+    int64 start_time_ms = 1;
+    int64 end_time_ms = 2;
+    reserved 3;
+    int64 iter_count = 4;
+    int64 delete_count = 5;
+    int64 safe_point_ts = 6;
+  }
+
+  message GCMetrics {
+    message TxnGcRegionHistory {
+      int64 region_id = 1;
+      TxnGcHistoryItem last_history = 2;
+      TxnGcHistoryItem last_delete_history = 3;
+    }
+
+    reserved 2;
+    reserved 4;
+    reserved 6;
+
+    int64 first_start_time_ms = 1;
+    int64 run_count = 3;
+    int64 last_end_time_ms = 5;
+    int64 total_iter_count = 7;
+    int64 total_delete_count = 8;
+
+    repeated TxnGcHistoryItem history = 10;
+    repeated TxnGcRegionHistory region_histories = 11;
+    TxnGcHistoryItem last_with_delete_history = 12;
+  }
+
   dingodb.pb.common.ResponseInfo response_info = 1;
   dingodb.pb.error.Error error = 2;
 
@@ -328,6 +360,7 @@ message DebugResponse {
   TsProviderMetrics ts_provider_metrics = 21;
   DocumentIndexMetrics document_index_metrics = 22;
   repeated RaftLogMeta raft_log_metas = 23;
+  GCMetrics gc_metrics = 24;
 }
 
 message GetMemoryStatsRequest {
