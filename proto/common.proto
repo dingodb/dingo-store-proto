@@ -1160,13 +1160,16 @@ message RocksDBPerfContext {
 
 // Condensed RocksDB perf summary returned to callers via RPC response.
 // Aggregates raw RocksDBPerfContext metrics into actionable categories.
-message RocksDBPerfSummary {
+message StorageEnginePerfSummary {
   // Total I/O time: block_read_time + block_decompress_time + seek_internal_seek_time + find_next_user_entry_time (ns)
   uint64 io_time_ns = 1;
-  // Block cache hit count
-  uint64 cache_hit_count = 2;
-  // Total internal keys skipped (MVCC versions + tombstones)
+ // Number of data blocks read from disk (block cache misses).
+  uint64 miss_block_count = 2;
+  // Total internal keys skipped MVCC versions
   uint64 internal_skipped_count = 3;
+  //Total internal keys tombstones
+  uint64 internal_tombstone_count =4;
+  
 }
 
 message TimeInfo {
@@ -1174,7 +1177,7 @@ message TimeInfo {
     string name = 1;
     uint64 time_us = 2;
     int64 skip_version = 3;
-    RocksDBPerfSummary rocksdb_perf_summary = 4;
+    StorageEnginePerfSummary storage_engine_perf_summary = 4;
   }
 
   int64 total_rpc_time_ns = 1;
