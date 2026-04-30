@@ -165,6 +165,13 @@ message MergeRequest {
 
 message ChangePeerRequest {
   dingodb.pb.common.RegionDefinition region_definition = 1;  // region definition contains new peer
+
+  // If true, coordinator queries the store(s) to determine whether the peer
+  // actually exists there, then branches the handling accordingly. Both
+  // "exists" and "does not exist" are valid outcomes that lead to different
+  // handling paths. Default false preserves the legacy behavior that decides
+  // purely from coordinator-side metadata.
+  bool verify_peer_on_store = 2;
 }
 
 message TransferLeaderRequest {
