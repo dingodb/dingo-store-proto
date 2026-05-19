@@ -610,6 +610,15 @@ message TxnGetResponse {
   // bool not_found = 10;
 }
 
+message TxnScanEntry {
+  oneof entry {
+    // Normal visible key-value.
+    dingodb.pb.common.KeyValue kv = 1;
+    // Lock conflict for this user key. LockInfo.key is the locked key.
+    LockInfo locked = 2;
+  }
+}
+
 // TxnScan fetches values for a range of keys in the transaction with start_ts.
 message TxnScanRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
@@ -631,6 +640,10 @@ message TxnScanRequest {
   dingodb.pb.common.CoprocessorV2 coprocessor = 20;
 
   dingodb.pb.stream.StreamRequestMeta stream_meta = 30;
+
+  // If true, scan returns ordered TxnScanEntry values instead of stopping at the first persisted key lock.
+  // Memory lock conflicts are still returned through txn_result.
+  bool enable_lock_collection = 40;
 }
 
 // TxnScan can be partially success
@@ -663,6 +676,9 @@ message TxnScanResponse {
   repeated dingodb.pb.common.DocumentWithId documents = 8;
 
   dingodb.pb.stream.StreamResponseMeta stream_meta = 30;
+
+  // Ordered scan entries for lock collection mode. In this mode kvs is not filled.
+  repeated TxnScanEntry entries = 40;
 }
 
 // Lock a set of keys to prepare to write to them.
