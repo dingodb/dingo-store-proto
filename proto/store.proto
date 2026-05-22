@@ -641,8 +641,10 @@ message TxnScanRequest {
 
   dingodb.pb.stream.StreamRequestMeta stream_meta = 30;
 
-  // If true, scan returns ordered TxnScanEntry values instead of stopping at the first persisted key lock.
-  // Memory lock conflicts are still returned through txn_result.
+  // If true, store-table scan returns TxnScanEntry values instead of stopping at the first persisted key lock.
+  // Lock collection only collects persisted locks; memory locks still go through `txn_result` before entries are produced.
+  // No extra validation or handling is applied for is_reverse; lock collection follows the existing scan behavior.
+  // Not supported with coprocessor, or for vector/document txn scan.
   bool enable_lock_collection = 40;
 }
 
@@ -677,7 +679,8 @@ message TxnScanResponse {
 
   dingodb.pb.stream.StreamResponseMeta stream_meta = 30;
 
-  // Ordered scan entries for lock collection mode. In this mode kvs is not filled.
+  // Scan entries for lock collection mode. In this mode kvs is not filled.
+  // Clients should check txn_result before handling entries.
   repeated TxnScanEntry entries = 40;
 }
 
