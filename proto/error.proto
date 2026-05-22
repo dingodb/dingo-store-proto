@@ -196,6 +196,9 @@ enum Errno {
   EREGION_STANDBY = 60020;
   EREGION_ORPHAN = 60021;
   EREGION_TOMBSTONE = 60022;
+  // Refused by DropRegionPermanently when enable_store_verify=true and the region
+  // still exists on at least one store (caller is trying to drop a non-orphan).
+  EREGION_NOT_ORPHAN = 60023;
 
   // vector [70000, 71000)
   EVECTOR_INDEX_NOT_FOUND = 70000;

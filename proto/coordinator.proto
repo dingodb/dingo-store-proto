@@ -924,6 +924,11 @@ message DropRegionPermanentlyRequest {
   dingodb.pb.common.RequestInfo request_info = 1;
   int64 cluster_id = 2;
   int64 region_id = 3;
+  // If true, verify the region is absent from all peer stores (via VerifyPeersOnStore)
+  // before erasing coordinator metadata. If false (default for backward compatibility),
+  // skip verification -- caller is responsible for ensuring the region is truly an orphan.
+  // dingodb_client / dingodb_cli default this flag to true on the command line.
+  bool enable_store_verify = 4;
 }
 
 message DropRegionPermanentlyResponse {
