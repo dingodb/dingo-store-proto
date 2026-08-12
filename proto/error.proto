@@ -326,6 +326,9 @@ enum Errno {
   ETXN_SCAN_FINISH = 130001;
   ETXN_LOCK_CONFLICT = 130002;
   ETXN_MEMORY_LOCK_CONFLICT = 130003;
+  // txn read/prewrite start_ts is not newer than the gc safe point: versions
+  // the snapshot depends on may already be garbage collected.
+  ETXN_LT_GC_SAFE_POINT = 130004;
 
   // rocks engine [140000, 150000)
   EROCKS_ENGINE_UPDATE = 140000;
