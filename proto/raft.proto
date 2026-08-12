@@ -237,6 +237,11 @@ message DeletesWithCf {
   repeated bytes keys = 2;
 }
 
+message DeleteRangesWithCf {
+  bytes cf_name = 1;
+  repeated dingodb.pb.common.Range ranges = 2;
+}
+
 message MultiCfPutAndDeleteRequest {
   repeated PutsWithCf puts_with_cf = 1;
   repeated DeletesWithCf deletes_with_cf = 2;
@@ -244,6 +249,10 @@ message MultiCfPutAndDeleteRequest {
   VectorDeleteRequest vector_del = 4;
   DocumentAddRequest document_add = 5;
   DocumentDeleteRequest document_del = 6;
+  // txn gc filter mode: delete-mark version groups removed as per-user-key
+  // ranges (raft-replicated) so replicas whose compaction filter progressed
+  // differently still converge; applied BEFORE the point deletes above.
+  repeated DeleteRangesWithCf delete_ranges_with_cf = 7;
 }
 
 message MultiCfPutAndDeleteResponse {}
