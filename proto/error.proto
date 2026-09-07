@@ -154,6 +154,9 @@ enum Errno {
   EMERGE_STORE_ENGINE_NOT_MATCH = 40034;
   EMERGE_RAW_ENGINE_NOT_MATCH = 40035;
   ECHANGE_PEER_STORE_ENGINE_NOT_MATCH = 40036;
+  // Refused by the ChangePeer failure-domain guard: the new peer set would pack more
+  // replicas of the region into one failure domain (host) than it already has.
+  ECHANGE_PEER_FAILURE_DOMAIN_WORSE = 40037;
 
   // raft [50000, 60000)
   ERAFT_INIT = 50000;
